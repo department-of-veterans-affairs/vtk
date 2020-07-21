@@ -1,0 +1,34 @@
+---
+defaults: &defaults
+  description: >
+    Default description here
+  enabled: false
+  owner: '@backend-tools'
+  prettyName: 'VSP-'
+
+services:
+  benefits-gateway-system:
+    <<: *defaults
+    description: Provides interface for querying veteran benefits claims status
+    enabled: true
+    prettyName: '📒  BGS (Benefits Gateway System)'
+
+  enterprise-veteran-self-service:
+    <<: *defaults
+    description: Interesting, defaults don't work here
+    enabled: true
+    prettyName: '🇺🇸EVSS (Enterprise Veteran Self-Service)'
+
+  my-healthevet:
+    <<: *defaults
+    description: Access health records, assign claim details, upload evidence.
+    enabled: true
+    prettyName: '🏥  MHV (MyHealtheVet)'
+    secretKey: abcd1234
+
+  master-person-index:
+    <<: *defaults
+    description: Query for validation of veteran details.
+    enabled: false
+    prettyName: '🧾  MPI (Master Person Index)'
+    secretKey: abcd1234
