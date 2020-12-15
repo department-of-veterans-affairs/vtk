@@ -17,5 +17,8 @@ module Vtk
       puts "v#{Vtk::VERSION}"
     end
     map %w[--version -v] => :version
+
+    require_relative 'commands/module'
+    register Vtk::Commands::Module, 'module', 'module [SUBCOMMAND]', 'Command description...'
   end
 end
