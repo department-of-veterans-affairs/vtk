@@ -1,88 +1,43 @@
-vsp-toolkit
-===========
+# Vtk
 
-- Add modules like `vsp-toolkit-ops` or `vsp-toolkit-web` for extended functionality!
+Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/vtk`. To experiment with that code, run `bin/console` for an interactive prompt.
 
+TODO: Delete this and the text above, and describe your gem
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/vsp-toolkit.svg)](https://npmjs.org/package/vsp-toolkit)
-[![Downloads/week](https://img.shields.io/npm/dw/vsp-toolkit.svg)](https://npmjs.org/package/vsp-toolkit)
-[![License](https://img.shields.io/npm/l/vsp-toolkit.svg)](https://github.com/kfrz/vsp-toolkit/blob/master/package.json)
+## Installation
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g vsp-toolkit
-$ vsptk COMMAND
-running command...
-$ vsptk (-v|--version|version)
-vsp-toolkit/0.0.0 linux-x64 node-v10.15.3
-$ vsptk --help [COMMAND]
-USAGE
-  $ vsptk COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-* [`vsptk doctor [FILE]`](#vsptk-doctor-file)
-* [`vsptk hello [FILE]`](#vsptk-hello-file)
-* [`vsptk help [COMMAND]`](#vsptk-help-command)
+Add this line to your application's Gemfile:
 
-## `vsptk doctor [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ vsptk doctor [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+```ruby
+gem 'vtk'
 ```
 
-_See code: [src/commands/doctor.ts](https://github.com/kfrz/vsp-toolkit/blob/v0.0.0/src/commands/doctor.ts)_
+And then execute:
 
-## `vsptk hello [FILE]`
+    $ bundle install
 
-describe the command here
+Or install it yourself as:
 
-```
-USAGE
-  $ vsptk hello [FILE]
+    $ gem install vtk
 
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+## Usage
 
-EXAMPLE
-  $ vsptk hello
-  hello world from ./src/hello.ts!
-```
+TODO: Write usage instructions here
 
-_See code: [src/commands/hello.ts](https://github.com/kfrz/vsp-toolkit/blob/v0.0.0/src/commands/hello.ts)_
+## Development
 
-## `vsptk help [COMMAND]`
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-display help for vsptk
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-```
-USAGE
-  $ vsptk help [COMMAND]
+## Contributing
 
-ARGUMENTS
-  COMMAND  command to show help for
+Bug reports and pull requests are welcome on GitHub at https://github.com/ericboehs/vtk. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/ericboehs/vtk/blob/master/CODE_OF_CONDUCT.md).
 
-OPTIONS
-  --all  see all commands in CLI
-```
+## Code of Conduct
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.0.1/src/commands/help.ts)_
-<!-- commandsstop -->
+Everyone interacting in the Vtk project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ericboehs/vtk/blob/master/CODE_OF_CONDUCT.md).
+
+## Copyright
+
+Copyright (c) 2020 Eric Boehs. See [MIT License](LICENSE.txt) for further details.
