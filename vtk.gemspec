@@ -6,12 +6,12 @@ Gem::Specification.new do |spec|
   spec.name          = 'vtk'
   spec.license       = 'MIT'
   spec.version       = Vtk::VERSION
-  spec.authors       = ['Eric Boehs']
-  spec.email         = ['eric@boehs.com']
+  spec.authors       = ['Eric Boehs', 'Lindsey Hattamer', 'Travis Hilton']
+  spec.email         = ['eric.boehs@oddball.io', 'lindsey.hattamer@oddball.io', 'travis.hilton@oddball.io']
 
-  spec.summary       = 'Write a short summary, because RubyGems requires one.'
-  # spec.description   = "TODO: Write a longer description or delete this line."
-  # spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = 'A CLI for the VSP platform'
+  spec.description   = "This is a CLI tool for the VSP platform for developer usage"
+  spec.homepage      = "https://github.com/department-of-veterans-affairs/vsp-toolkit"
   spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
