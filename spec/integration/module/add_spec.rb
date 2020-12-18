@@ -5,12 +5,12 @@ RSpec.describe '`vtk module add` command', type: :cli do
     output = `vtk module help add`
     expected_output = <<~OUT
       Usage:
-        vtk module add NAME
+        vtk module add <module name>
 
       Options:
         -h, [--help], [--no-help]  # Display usage information
 
-      Command description...
+      Add a new module to vets-api
     OUT
 
     expect(output).to eq(expected_output)

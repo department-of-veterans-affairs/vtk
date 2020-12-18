@@ -5,8 +5,8 @@ RSpec.describe '`vtk module` command', type: :cli do
     output = `vtk help module`
     expected_output = <<~OUT
       Commands:
-        vtk module add NAME        # Command description...
-        vtk module help [COMMAND]  # Describe subcommands or one specific subcommand
+        vtk module add <module name>  # Add a new module to vets-api
+        vtk module help [COMMAND]     # Describe subcommands or one specific subcommand
 
     OUT
 
