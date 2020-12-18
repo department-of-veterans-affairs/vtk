@@ -16,9 +16,14 @@ module Vtk
           super()
         end
 
-        def execute(_input: $stdin, output: $stdout)
+        def execute(_input: $stdin, _output: $stdout)
+          create_module name
+        end
+
+        private
+
+        def create_module(name)
           `rails g module #{name}`
-          output.puts 'OK'
         end
       end
     end

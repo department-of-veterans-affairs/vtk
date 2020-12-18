@@ -5,12 +5,13 @@ require 'vtk/commands/module/add'
 RSpec.describe Vtk::Commands::Module::Add do
   it 'executes `module add` command successfully' do
     output = StringIO.new
-    name = nil
+    name = 'foo'
     options = {}
     command = Vtk::Commands::Module::Add.new(name, options)
 
-    command.execute(output: output)
+    allow(command).to receive :create_module
+    expect(command).to receive(:create_module).with 'foo'
 
-    expect(output.string).to eq("OK\n")
+    command.execute _output: output
   end
 end
