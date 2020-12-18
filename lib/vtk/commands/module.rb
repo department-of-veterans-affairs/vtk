@@ -8,7 +8,7 @@ module Vtk
     class Module < Thor
       namespace :module
 
-      desc 'add NAME', 'Command description...'
+      desc 'add <module name>', 'Add a new module to vets-api'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       def add(name)
