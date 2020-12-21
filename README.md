@@ -1,8 +1,7 @@
-# Vtk
+# VTK
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/vtk`. To experiment with that code, run `bin/console` for an interactive prompt.
+The purpose of this gem is to allow VFS engineers to quickly begin developing on the platform. It does this by providing a command line interface that allows the use of simple commands and parameters to do everything from setting up a development environment to building out a directory structure and creating necessary files for separating code into its own module.
 
-TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
@@ -22,22 +21,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Modules
 
-## Development
+Teams developing for vets-api should create their code as a module. This allows for the separation and easy identification of different projects. To scaffold a directory structure for your module, enter the command below, substituting the name of your module for <module name>. This will build out a directory structure and create necessary files in the modules/ directory.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+    $ vtk module add <module name>
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/ericboehs/vtk. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/ericboehs/vtk/blob/master/CODE_OF_CONDUCT.md).
-
-## Code of Conduct
-
-Everyone interacting in the Vtk project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ericboehs/vtk/blob/master/CODE_OF_CONDUCT.md).
-
-## Copyright
-
-Copyright (c) 2020 Eric Boehs. See [MIT License](LICENSE.txt) for further details.
