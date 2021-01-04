@@ -1,8 +1,19 @@
-*-debug.log
-*-error.log
-/.nyc_output
-/dist
-/lib
-/package-lock.json
-/tmp
-node_modules
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
+
+# rspec failure tracking
+.rspec_status
+
+# Don't check in lock file for this app (gem)
+Gemfile.lock
