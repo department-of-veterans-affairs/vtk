@@ -6,17 +6,7 @@ The purpose of this gem is to allow VFS engineers to quickly begin developing on
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'vtk'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
+Install it yourself as:
 
     $ gem install vtk
 
