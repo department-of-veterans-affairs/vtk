@@ -1,4 +1,4 @@
-# VTK
+# VSP Toolkit (`vtk`)
 
 The purpose of this gem is to allow VFS engineers to quickly begin developing on the platform. It does this by providing a command line interface that allows the use of simple commands and parameters to do everything from setting up a development environment to building out a directory structure and creating necessary files for separating code into its own module.
 
