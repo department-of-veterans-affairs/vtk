@@ -23,7 +23,12 @@ module Vtk
         private
 
         def create_module(name)
-          `rails g module #{name}`
+          # create a new module from the vets-api generator
+          if(`gem which rails` == "")
+            output.puts 'Rails is a dependency of this command and was not found, please install Rails'
+          else
+            `rails g module #{name}`
+          end
         end
       end
     end
