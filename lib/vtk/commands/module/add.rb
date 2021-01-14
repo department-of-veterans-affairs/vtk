@@ -27,7 +27,7 @@ module Vtk
           if(`gem which rails` == "")
             output.puts 'Please install Rails - This command runs a Rails generator and Rails is a dependency of vtk'
           else
-            `rails g module #{name}`
+            system("rails g module #{name}")
           end
         end
       end
