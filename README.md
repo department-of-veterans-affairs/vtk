@@ -17,3 +17,9 @@ Install it yourself as:
 Teams developing for vets-api should create their code as a module. This allows for the separation and easy identification of different projects. To scaffold a directory structure for your module, first cd into the vets-api directory, then enter the command below, substituting the name of your module for `<module name>`. This will build out a directory structure and create necessary files in the `modules/` directory.
 
     $ vtk module add <module name>
+    
+### Help
+
+For helpful information about commands and subcommands run the following:
+
+    $ vtk --help
