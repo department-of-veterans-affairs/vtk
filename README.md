@@ -18,6 +18,8 @@ Teams developing for vets-api should create their code as a module. This allows 
 
     $ vtk module add <module name>
     
+This above command runs a custom rails generator. For more information see the [module generator documentation](https://github.com/department-of-veterans-affairs/vets-api/blob/master/lib/generators/module/USAGE)
+    
 ### Help
 
 For helpful information about commands and subcommands run the following:
