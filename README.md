@@ -22,4 +22,4 @@ Teams developing for vets-api should create their code as a module. This allows 
 
 For helpful information about commands and subcommands run the following:
 
-    $ vtk --help
+    $ vtk -h
