@@ -13,6 +13,16 @@ RSpec.describe '`vtk module` command', type: :cli do
     output = `vtk help module`
     expected_output = <<~OUT
       vtk module controller <module name>  # Add new controller to a module in vets-api
+
+    OUT
+    expect(output).to include(expected_output)
+  end
+
+  it 'executes `vtk help module` successfully and contains service command' do
+    output = `vtk help module`
+    expected_output = <<~OUT
+      vtk module service <module name>  # Add new service to a module in vets-api
+
     OUT
     expect(output).to include(expected_output)
   end
