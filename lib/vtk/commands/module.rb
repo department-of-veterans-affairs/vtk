@@ -8,6 +8,17 @@ module Vtk
     class Module < Thor
       namespace :module
 
+      desc 'service <module name>', 'Add new service class to a module in vets-api'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def service(name)
+        if options[:help]
+          invoke :help, ['service']
+        else
+          require_relative 'module/service'
+          Vtk::Commands::Module::Service.new(name, options).execute
+        end
+      end
       desc 'add <module name>', 'Add a new module to vets-api'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
