@@ -14,7 +14,7 @@ Install it yourself as:
 
 ### Modules
 
-Teams developing for vets-api should create their code as a module. This allows for the separation and easy identification of different projects. To scaffold a directory structure for your module, first cd into the vets-api directory, then enter the command below, substituting the name of your module for *<module name>*. This will build out a directory structure and create necessary files in the `modules/` directory.
+Teams developing for vets-api should create their code as a module. This allows for the separation and easy identification of different projects. To scaffold a directory structure for your module, first cd into the vets-api directory, then enter the command below, substituting the name of your module for `<module name>`. This will build out a directory structure and create necessary files in the `modules/` directory.
 
     $ vtk module add <module name>
 	
@@ -24,3 +24,11 @@ To add additional functionality to your module, the commands listed below are av
 	$ vtk module model <module name>
 	$ vtk module serializer <module name>
 	$ vtk module service <module name>
+    
+This above command runs a custom rails generator. For more information see the [module generator documentation](https://github.com/department-of-veterans-affairs/vets-api/blob/master/lib/generators/module/USAGE)
+    
+### Help
+
+For helpful information about commands and subcommands run the following:
+
+    $ vtk -h
