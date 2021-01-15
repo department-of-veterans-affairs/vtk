@@ -31,6 +31,19 @@ module Vtk
           Vtk::Commands::Module::Serializer.new(name, options).execute
         end
       end
+
+      desc 'model <module name>', 'Add new model to a module in vets-api'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def model(name)
+        if options[:help]
+          invoke :help, ['model']
+        else
+          require_relative 'module/model'
+          Vtk::Commands::Module::Model.new(name, options).execute
+        end
+      end
+
       desc 'add <module name>', 'Add a new module to vets-api'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
