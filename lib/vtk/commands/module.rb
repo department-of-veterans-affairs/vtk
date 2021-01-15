@@ -19,6 +19,18 @@ module Vtk
           Vtk::Commands::Module::Service.new(name, options).execute
         end
       end
+
+      desc 'serializer <module name>', 'Add new serializer to a module in vets-api'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def serializer(name)
+        if options[:help]
+          invoke :help, ['serializer']
+        else
+          require_relative 'module/serializer'
+          Vtk::Commands::Module::Serializer.new(name, options).execute
+        end
+      end
       desc 'add <module name>', 'Add a new module to vets-api'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
