@@ -44,6 +44,18 @@ module Vtk
         end
       end
 
+      desc 'controller <module name>', 'Add new controller to a module in vets-api'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def controller(name)
+        if options[:help]
+          invoke :help, ['controller']
+        else
+          require_relative 'module/controller'
+          Vtk::Commands::Module::Controller.new(name, options).execute
+        end
+      end
+
       desc 'add <module name>', 'Add a new module to vets-api'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
