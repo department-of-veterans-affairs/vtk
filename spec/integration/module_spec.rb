@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe '`vtk module` command', type: :cli do
-  it 'executes `vtk help module and contains add command` command successfully' do
+  it 'executes `vtk help module` successfully and contains add command' do
     output = `vtk help module`
     expected_output = <<~OUT
       vtk module add <module name>         # Add a new module to vets-api
