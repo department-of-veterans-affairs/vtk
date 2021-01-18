@@ -9,9 +9,10 @@ RSpec.describe '`vtk module` command', type: :cli do
     expect(output).to include(expected_output)
   end
 
-  it 'executes `vtk help module` successfully and contains serializer command' do
+  it 'executes `vtk help module` successfully and contains controller command' do
     output = `vtk help module`
-    expect(output).to include('vtk module serializer <module name>')
+    expect(output).to include('vtk module controller <module name>')
+    expect(output).to include('# Add new controller to a module in vets-api')
   end
 
   it 'executes `vtk help module` successfully and contains model command' do
@@ -20,5 +21,17 @@ RSpec.describe '`vtk module` command', type: :cli do
       vtk module model <module name>       # Add new model to a module in vets-api
     OUT
     expect(output).to include(expected_output)
+  end
+
+  it 'executes `vtk help module` successfully and contains serializer command' do
+    output = `vtk help module`
+    expect(output).to include('vtk module serializer <module name>')
+    expect(output).to include('# Add new serializer to a module in vets-api')
+  end
+
+  it 'executes `vtk help module` successfully and contains service command' do
+    output = `vtk help module`
+    expect(output).to include('vtk module service <module name>')
+    expect(output).to include('# Add new service class to a module in vets-api')
   end
 end
