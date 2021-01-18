@@ -11,7 +11,7 @@ RSpec.describe '`vtk module` command', type: :cli do
 
   it 'executes `vtk help module` successfully and contains serializer command' do
     output = `vtk help module`
-    expect(output).to include("vtk module serializer <module name>")
+    expect(output).to include('vtk module serializer <module name>')
   end
 
   it 'executes `vtk help module` successfully and contains model command' do
