@@ -13,6 +13,7 @@ RSpec.describe '`vtk module` command', type: :cli do
     output = `vtk help module`
     expected_output = <<~OUT
       vtk module controller <module name>  # Add new controller to a module in vets-api
+
     OUT
     expect(output).to include(expected_output)
   end
