@@ -26,10 +26,12 @@ RSpec.describe '`vtk module` command', type: :cli do
   it 'executes `vtk help module` successfully and contains serializer command' do
     output = `vtk help module`
     expect(output).to include('vtk module serializer <module name>')
+    expect(output).to include('# Add new serializer')
   end
 
   it 'executes `vtk help module` successfully and contains service command' do
     output = `vtk help module`
     expect(output).to include('vtk module service <module name>')
+    expect(output).to include('# Add new service')
   end
 end
