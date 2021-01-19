@@ -32,3 +32,4 @@ This above command runs a custom rails generator. For more information see the [
 For helpful information about commands and subcommands run the following:
 
     $ vtk -h
+    $ vtk module -h
