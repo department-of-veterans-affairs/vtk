@@ -22,7 +22,7 @@ module Vtk
 
         private
 
-        def create_controller(name)
+        def create_serializer(name)
           `rails g module_component #{name} serializer`
         end
       end
