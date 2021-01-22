@@ -23,7 +23,7 @@ module Vtk
         private
 
         def create_model(name)
-          `rails g module_component #{name} model`
+          system("rails g module_component #{name} model")
         end
       end
     end

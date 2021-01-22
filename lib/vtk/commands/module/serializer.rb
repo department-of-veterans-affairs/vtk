@@ -23,7 +23,7 @@ module Vtk
         private
 
         def create_serializer(name)
-          `rails g module_component #{name} serializer`
+          system("rails g module_component #{name} serializer")
         end
       end
     end
