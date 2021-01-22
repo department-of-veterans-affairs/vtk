@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'vtk/analytics'
 
 module Vtk
   # Command class that all command inherit from
@@ -8,6 +9,10 @@ module Vtk
     extend Forwardable
 
     def_delegators :command, :run
+
+    def initialize
+      Vtk::Analytics.new(name: "command_called.#{ARGV.join '-'}", title: 'Command Called').log
+    end
 
     # Execute this command
     #
