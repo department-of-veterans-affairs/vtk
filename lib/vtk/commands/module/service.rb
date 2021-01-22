@@ -23,7 +23,7 @@ module Vtk
         private
 
         def create_service(name)
-          `rails g module_component #{name} service`
+          system("rails g module_component #{name} service")
         end
       end
     end

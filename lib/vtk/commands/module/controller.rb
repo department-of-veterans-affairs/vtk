@@ -23,7 +23,7 @@ module Vtk
         private
 
         def create_controller(name)
-          `rails g module_component #{name} controller`
+          system("rails g module_component #{name} controller")
         end
       end
     end
