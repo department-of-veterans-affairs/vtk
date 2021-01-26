@@ -33,3 +33,11 @@ For helpful information about commands and subcommands run the following:
 
     $ vtk -h
     $ vtk module -h
+
+### Docker
+
+If using the vtk gem in Docker, you may first need to run the following commands to avoid any errors:
+
+	$ make docker-clean
+	$ make build
+	$ make bash
