@@ -22,13 +22,11 @@ module Vtk
       return if ENV['CI'] || ENV['TEST']
 
       Process.fork do
-        begin
-          exit unless internet?
+        exit unless internet?
 
-          emit_event
-        rescue StandardError
-          false # Silently error
-        end
+        emit_event
+      rescue StandardError
+        false # Silently error
       end
     end
 

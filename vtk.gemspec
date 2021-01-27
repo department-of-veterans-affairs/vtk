@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'A CLI for the platform'
   spec.description   = 'This is a platform CLI tool for VFS developer usage.'
   spec.homepage      = 'https://github.com/department-of-veterans-affairs/vtk'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['documentation_uri'] = spec.homepage
@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry', '~> 0.13.0'
   spec.add_development_dependency 'rake', '~> 13.0.0'
   spec.add_development_dependency 'rspec', '~> 3.10.0'
-  spec.add_development_dependency 'rubocop', '~> 1.6.0'
+  spec.add_development_dependency 'rubocop', '~> 1.8.0'
   spec.add_development_dependency 'rubocop-rake', '~> 0.5.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.0.0'
 
