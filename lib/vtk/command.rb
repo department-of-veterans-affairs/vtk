@@ -11,7 +11,8 @@ module Vtk
     def_delegators :command, :run
 
     def initialize
-      Vtk::Analytics.new(name: "command_called.#{ARGV.join '-'}", title: 'Command Called').log
+      command_name = self.class.to_s.split('::').last(2).join('_').downcase
+      Vtk::Analytics.new(name: command_name).log
     end
 
     # Execute this command
