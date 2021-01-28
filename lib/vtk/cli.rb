@@ -18,6 +18,9 @@ module Vtk
     end
     map %w[--version -v] => :version
 
+    require_relative 'commands/socks'
+    register Vtk::Commands::Socks, 'socks', 'socks [SUBCOMMAND]', 'Command description...'
+
     require_relative 'commands/module'
     register Vtk::Commands::Module, 'module', 'module [SUBCOMMAND]', 'Command description...'
   end
