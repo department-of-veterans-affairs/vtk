@@ -50,7 +50,7 @@ module Vtk
             return output.puts "\r----> Connected to SOCKS."
           end
 
-          output.puts "\r----> ERROR: Could not connect to SOCKS."
+          output.puts "\r----> ERROR: Could not connect to SOCKS. Try running `vtk socks setup` first."
           output.puts "----> Verbose Output from SSH log:\n\n"
 
           output.puts File.read '/tmp/socks.log'

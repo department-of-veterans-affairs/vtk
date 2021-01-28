@@ -8,6 +8,18 @@ module Vtk
     class Socks < Thor
       namespace :socks
 
+      desc 'setup', 'Command description...'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def setup(*)
+        if options[:help]
+          invoke :help, ['setup']
+        else
+          require_relative 'socks/setup'
+          Vtk::Commands::Socks::Setup.new(options).execute
+        end
+      end
+
       desc 'off', 'Disconnects from VA SOCKS'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
