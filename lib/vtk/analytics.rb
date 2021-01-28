@@ -10,15 +10,16 @@ module Vtk
   class Analytics
     CLIENT_KEY = ''
 
-    attr_reader :args, :hostname
+    attr_reader :name, :args, :hostname
 
-    def initialize(name:, hostname: nil)
-      @args = name
+    def initialize(name:, args: nil, hostname: nil)
+      @name = name
+      @args = args || ARGV.join('_')
       @hostname = hostname || `hostname -f`.chomp
     end
 
     def log
-      return if ENV['CI'] || ENV['TEST']
+      return if ENV['CI'] || ENV['TEST'] || ENV['VTK_DISABLE_ANALYTICS']
 
       Process.fork do
         exit unless internet?
@@ -43,7 +44,7 @@ module Vtk
         metric: 'vtk.command_executed',
         type: 'count',
         interval: 1,
-        tags: "args:#{args}",
+        tags: ["name:#{name}", "args:#{args}"],
         host: hostname,
         points: [[Time.now.utc.to_i, '1']]
       }
