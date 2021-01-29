@@ -7,10 +7,11 @@ module Vtk
     class Socks
       # Turns on SOCKS connection to VA network
       class On < Vtk::Command
-        attr_reader :input, :output
+        attr_reader :input, :output, :port
 
         def initialize(options)
           @options = options
+          @port = options['port'] || '2001'
 
           super()
         end
@@ -29,16 +30,19 @@ module Vtk
         private
 
         def connected?
-          system 'nscurl http://sentry.vfs.va.gov 2> /dev/null | grep -q sentry-logo'
+          system "curl --max-time 2 -sL --proxy socks5h://127.0.0.1:#{port} sentry.vfs.va.gov 2> /dev/null | " \
+            'grep -q sentry-logo'
         end
 
         def ensure_host_authenticity
-          `ssh -q socks -D 2001 exit | grep -v "This account is currently not available." || true`
+          `ssh -q socks -D #{port} exit | grep -v "This account is currently not available." || true`
         end
 
         def connect_to_socks
           Process.fork do
-            `lsof -Pi :2001 -sTCP:LISTEN -t > /dev/null || ssh -o ServerAliveInterval=60 socks -D 2001 -N`
+            exit if system "lsof -Pi :#{port} -sTCP:LISTEN -t > /dev/null"
+
+            `nohup ssh -o ServerAliveInterval=60 socks -D #{port} -N 2>&1 /dev/null &`
           end
         end
 

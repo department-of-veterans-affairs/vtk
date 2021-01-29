@@ -24,6 +24,8 @@ module Vtk
       desc 'on', 'Command description...'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
+      method_option :port, aliases: '-p', type: :string,
+                           desc: 'Port to run SOCKS server on'
       def on(*)
         if options[:help]
           invoke :help, ['on']
