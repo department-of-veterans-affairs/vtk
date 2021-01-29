@@ -4,6 +4,7 @@ require 'thor'
 
 module Vtk
   module Commands
+    # Handles connecting to VA network via SOCKS
     class Socks < Thor
       namespace :socks
 
