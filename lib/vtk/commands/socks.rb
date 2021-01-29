@@ -5,12 +5,13 @@ require 'thor'
 module Vtk
   module Commands
     class Socks < Thor
-
       namespace :socks
 
       desc 'off', 'Command description...'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
+      method_option :port, aliases: '-p', type: :string,
+                           desc: 'Port that SOCKS server is running on'
       def off(*)
         if options[:help]
           invoke :help, ['off']
