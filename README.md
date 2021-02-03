@@ -41,3 +41,16 @@ If using the vtk gem in Docker, you may first need to run the following commands
 	$ make docker-clean
 	$ make build
 	$ make bash
+	
+### Contributing
+1. Clone the repo
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Run the tests (bundle exec rake)
+4. Commit your changes 
+5. Push to the branch (git push origin my-new-feature)
+6. Create new Pull Request
+
+### Releasing
+1. Update the version to be whatever it should be and commit
+2. Update the changelog — (github_changelog_generator -u department-of-veterans-affairs -p vtk)
+3. bundle exec rake release

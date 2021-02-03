@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/department-of-veterans-affairs/vtk/tree/HEAD)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.5...HEAD)
+
+## [v0.2.5](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.5) (2021-02-03)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.4...v0.2.5)
+
+**Merged pull requests:**
+
+- add gem [\#12](https://github.com/department-of-veterans-affairs/vtk/pull/12) ([LindseySaari](https://github.com/LindseySaari))
+
 ## [v0.2.4](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.4) (2021-01-26)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/oclif...v0.2.4)
