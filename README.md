@@ -52,5 +52,5 @@ If using the vtk gem in Docker, you may first need to run the following commands
 
 ### Releasing
 1. Update the version to be whatever it should be and commit
-2. Update the changelog — (github_changelog_generator -u department-of-veterans-affairs -p vtk)
-3. bundle exec rake release
+2. ``` bundle exec rake release ```
+3. Update the changelog — (github_changelog_generator -u department-of-veterans-affairs -p vtk)
