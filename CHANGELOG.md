@@ -7,7 +7,7 @@
 **Merged pull requests:**
 
 - Update changelog docs and raketask [\#13](https://github.com/department-of-veterans-affairs/vtk/pull/13) ([LindseySaari](https://github.com/LindseySaari))
-- add gem [\#12](https://github.com/department-of-veterans-affairs/vtk/pull/12) ([LindseySaari](https://github.com/LindseySaari))
+- add gem to auto generate changelog [\#12](https://github.com/department-of-veterans-affairs/vtk/pull/12) ([LindseySaari](https://github.com/LindseySaari))
 
 ## [v0.2.5](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.5) (2021-02-03)
 
