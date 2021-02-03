@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'thor', '> 0.20.3'
 
+  spec.add_development_dependency 'github_changelog_generator', '~> 1.15.0'
   spec.add_development_dependency 'rake', '~> 13.0.0'
   spec.add_development_dependency 'rspec', '~> 3.10.0'
   spec.add_development_dependency 'rubocop', '~> 1.6.0'
