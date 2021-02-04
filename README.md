@@ -52,7 +52,7 @@ If using the vtk gem in Docker, you may first need to run the following commands
 
 ### Releasing
 1. Merge in your approved pull requests
-2. Update the version to be whatever it should be and commit
+2. Update the version to be whatever it should (in lib/vtk/version.rb) be and commit
 3. ``` bundle exec rake release ``` 
    - This will tag the release and publish to RubyGems
 4. Update the changelog — (```github_changelog_generator -u department-of-veterans-affairs -p vtk```)
