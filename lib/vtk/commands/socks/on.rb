@@ -22,7 +22,6 @@ module Vtk
 
           return output.puts '----> Already connected to SOCKS.' if connected?
 
-          ensure_host_authenticity
           connect_to_socks
           ensure_connection
         end
@@ -34,14 +33,11 @@ module Vtk
             'grep -q sentry-logo'
         end
 
-        def ensure_host_authenticity
-          `ssh -q socks -D #{port} exit | grep -v "This account is currently not available." || true`
-        end
-
         def connect_to_socks
           exit if system "lsof -Pi :#{port} -sTCP:LISTEN -t > /dev/null"
 
-          Process.spawn "nohup ssh -o ServerAliveInterval=60 socks -D #{port} -N > /tmp/ssh_socks.log 2>&1 &"
+          Process.spawn "nohup ssh -vvv -o ServerAliveInterval=60 -o ConnectTimeout=5 socks -D #{port} -N" \
+            '> /tmp/socks.log 2>&1 &'
         end
 
         def ensure_connection
@@ -55,6 +51,9 @@ module Vtk
           end
 
           output.puts "\r----> ERROR: Could not connect to SOCKS."
+          output.puts "----> Verbose Output from SSH log:\n\n"
+
+          output.puts File.read '/tmp/socks.log'
         end
       end
     end
