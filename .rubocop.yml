@@ -7,3 +7,4 @@ Layout/LineLength:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
+    - '*.gemspec'
