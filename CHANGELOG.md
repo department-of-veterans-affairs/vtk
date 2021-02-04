@@ -15,7 +15,7 @@
 
 ## [v0.2.4](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.4) (2021-01-26)
 
-[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/oclif...v0.2.4)
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.3...v0.2.4)
 
 **Merged pull requests:**
 
@@ -23,8 +23,29 @@
 - use system command [\#7](https://github.com/department-of-veterans-affairs/vtk/pull/7) ([LindseySaari](https://github.com/LindseySaari))
 - Add additional module subcommands [\#6](https://github.com/department-of-veterans-affairs/vtk/pull/6) ([LindseySaari](https://github.com/LindseySaari))
 - Check for Rails dependency [\#5](https://github.com/department-of-veterans-affairs/vtk/pull/5) ([LindseySaari](https://github.com/LindseySaari))
+
+## [v0.2.3](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.3) (2021-01-05)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.2...v0.2.3)
+
+**Merged pull requests:**
+
 - one more crack at fixing the README [\#4](https://github.com/department-of-veterans-affairs/vtk/pull/4) ([thilton-oddball](https://github.com/thilton-oddball))
+
+## [v0.2.2](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.2) (2021-01-05)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.1.0...v0.2.2)
+
+**Merged pull requests:**
+
 - fixing markdown in README … [\#3](https://github.com/department-of-veterans-affairs/vtk/pull/3) ([thilton-oddball](https://github.com/thilton-oddball))
+
+## [v0.1.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.1.0) (2021-01-04)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/oclif...v0.1.0)
+
+**Merged pull requests:**
+
 - Start afresh with tty [\#2](https://github.com/department-of-veterans-affairs/vtk/pull/2) ([LindseySaari](https://github.com/LindseySaari))
 
 ## [oclif](https://github.com/department-of-veterans-affairs/vtk/tree/oclif) (2020-08-10)
