@@ -14,7 +14,6 @@ task default: %i[spec rubocop]
 desc 'Tags version, pushes to remote, and pushes gem'
 task :release do
   sh 'git', 'tag', "v#{Vtk::VERSION}"
-  sh 'git push origin master'
   sh "git push origin v#{Vtk::VERSION}"
   sh 'rake build'
   sh 'ls pkg/*.gem | xargs -n 1 gem push'
