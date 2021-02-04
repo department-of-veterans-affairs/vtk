@@ -39,11 +39,9 @@ module Vtk
         end
 
         def connect_to_socks
-          Process.fork do
-            exit if system "lsof -Pi :#{port} -sTCP:LISTEN -t > /dev/null"
+          exit if system "lsof -Pi :#{port} -sTCP:LISTEN -t > /dev/null"
 
-            `nohup ssh -o ServerAliveInterval=60 socks -D #{port} -N 2>&1 /dev/null &`
-          end
+          Process.spawn "nohup ssh -o ServerAliveInterval=60 socks -D #{port} -N > /tmp/ssh_socks.log 2>&1 &"
         end
 
         def ensure_connection

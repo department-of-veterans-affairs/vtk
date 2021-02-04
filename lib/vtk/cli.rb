@@ -19,7 +19,7 @@ module Vtk
     map %w[--version -v] => :version
 
     require_relative 'commands/socks'
-    register Vtk::Commands::Socks, 'socks', 'socks [SUBCOMMAND]', 'Command description...'
+    register Vtk::Commands::Socks, 'socks', 'socks [SUBCOMMAND]', 'Handles connecting to VA network via SOCKS'
 
     require_relative 'commands/module'
     register Vtk::Commands::Module, 'module', 'module [SUBCOMMAND]', 'Command description...'

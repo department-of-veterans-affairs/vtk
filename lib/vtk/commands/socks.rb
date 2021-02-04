@@ -8,7 +8,7 @@ module Vtk
     class Socks < Thor
       namespace :socks
 
-      desc 'off', 'Command description...'
+      desc 'off', 'Disconnects from VA SOCKS'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       method_option :port, aliases: '-p', type: :string,
@@ -22,7 +22,7 @@ module Vtk
         end
       end
 
-      desc 'on', 'Command description...'
+      desc 'on', 'Connects to VA SOCKS'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       method_option :port, aliases: '-p', type: :string,
