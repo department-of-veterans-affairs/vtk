@@ -8,9 +8,13 @@ module Vtk
     class Socks < Thor
       namespace :socks
 
-      desc 'setup', 'Command description...'
+      desc 'setup', 'Configures local machine for VA SOCKS access'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
+      method_option :ssh_key_path, type: :string, desc: 'Path to SSH key (e.g. ~/.ssh/id_rsa_vagov)'
+      method_option :ssh_config_path, type: :string, desc: 'Path to SSH config (e.g. ~/.ssh/config)'
+      method_option :port, aliases: '-p', type: :string,
+                           desc: 'Port that SOCKS server is running on'
       def setup(*)
         if options[:help]
           invoke :help, ['setup']

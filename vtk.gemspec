@@ -29,6 +29,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'thor', '> 0.20.3'
+  spec.add_dependency 'tty-command', '~> 0.10.0'
+  spec.add_dependency 'tty-prompt', '~> 0.23.0'
 
   spec.add_development_dependency 'github_changelog_generator', '~> 1.15.0'
   spec.add_development_dependency 'pry', '~> 0.13.0'
