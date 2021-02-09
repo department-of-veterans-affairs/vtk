@@ -16,5 +16,5 @@ task :release do
   sh 'git', 'tag', "v#{Vtk::VERSION}"
   sh "git push origin v#{Vtk::VERSION}"
   sh 'rake build'
-  sh 'ls pkg/*.gem | xargs -n 1 gem push'
+  sh "ls pkg/vtk-#{Vtk::VERSION}.gem | xargs -n 1 gem push"
 end
