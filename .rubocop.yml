@@ -6,4 +6,5 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Exclude:
-    - 'spec/integration/module_spec.rb'
+    - 'spec/**/*.rb'
+    - '*.gemspec'

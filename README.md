@@ -26,6 +26,23 @@ To add additional functionality to your module, the commands listed below are av
     $ vtk module service <module name>
     
 This above command runs a custom rails generator. For more information see the [module generator documentation](https://github.com/department-of-veterans-affairs/vets-api/blob/master/lib/generators/module/USAGE)
+
+### SOCKS
+
+Handles connecting to VA network via SOCKS.
+
+```
+$ vtk socks on
+----> Connecting...
+----> Connected to SOCKS.
+```
+
+To disconnect, run:
+
+```
+$ vtk socks off
+----> Disconnected from SOCKS.
+```
     
 ### Help
 
