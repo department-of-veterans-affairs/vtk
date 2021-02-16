@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.3.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.3.0) (2021-02-16)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.6...v0.3.0)
+
+**Merged pull requests:**
+
+- SOCKS On/Off Commands [\#9](https://github.com/department-of-veterans-affairs/vtk/pull/9) ([ericboehs](https://github.com/ericboehs))
+
 ## [v0.2.6](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.6) (2021-02-03)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.5...v0.2.6)
