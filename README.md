@@ -9,6 +9,10 @@ The purpose of this gem is to allow VFS engineers to quickly begin developing on
 Install it yourself as:
 
     $ gem install vtk
+    
+To update to the latest version:
+
+    $ gem update vtk
 
 ## Usage
 
@@ -50,6 +54,7 @@ For helpful information about commands and subcommands run the following:
 
     $ vtk -h
     $ vtk module -h
+    $ vtk socks -h
 
 ### Docker
 
