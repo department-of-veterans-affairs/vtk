@@ -17,13 +17,14 @@ module Vtk
         end
 
         def execute(_input: $stdin, _output: $stdout)
-          create_service(name)
+          create_service(name, options)
         end
 
         private
 
-        def create_service(name)
-          system("rails g module_component #{name} service")
+        def create_service(name, options)
+          component_name = options[:component_name] || name
+          system("rails g module_component #{name} method:service component_name:#{component_name}")
         end
       end
     end

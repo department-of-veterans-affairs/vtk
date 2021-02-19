@@ -9,8 +9,8 @@ module Vtk
       namespace :module
 
       desc 'service <module name>', 'Add new service class to a module in vets-api'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
+      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the service name'
       def service(name)
         if options[:help]
           invoke :help, ['service']
@@ -21,8 +21,8 @@ module Vtk
       end
 
       desc 'serializer <module name>', 'Add new serializer to a module in vets-api'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
+      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the serializer name'
       def serializer(name)
         if options[:help]
           invoke :help, ['serializer']
@@ -33,8 +33,8 @@ module Vtk
       end
 
       desc 'model <module name>', 'Add new model to a module in vets-api'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
+      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the model name'
       def model(name)
         if options[:help]
           invoke :help, ['model']
@@ -45,8 +45,8 @@ module Vtk
       end
 
       desc 'controller <module name>', 'Add new controller to a module in vets-api'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
+      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the controller name'
       def controller(name)
         if options[:help]
           invoke :help, ['controller']
@@ -57,8 +57,7 @@ module Vtk
       end
 
       desc 'add <module name>', 'Add a new module to vets-api'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
       def add(name)
         if options[:help]
           invoke :help, ['add']

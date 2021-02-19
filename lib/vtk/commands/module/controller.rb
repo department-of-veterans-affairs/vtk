@@ -17,13 +17,14 @@ module Vtk
         end
 
         def execute(_input: $stdin, _output: $stdout)
-          create_controller(name)
+          create_controller(name, options)
         end
 
         private
 
-        def create_controller(name)
-          system("rails g module_component #{name} controller")
+        def create_controller(name, options)
+          component_name = options[:component_name] || name
+          system("rails g module_component #{name} method:controller component_name:#{component_name}")
         end
       end
     end

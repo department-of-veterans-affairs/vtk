@@ -10,7 +10,7 @@ RSpec.describe Vtk::Commands::Module::Model do
     command = Vtk::Commands::Module::Model.new(name, options)
 
     allow(command).to receive :create_model
-    expect(command).to receive(:create_model).with 'foo'
+    expect(command).to receive(:create_model).with 'foo', {}
 
     command.execute _output: output
   end

@@ -8,7 +8,8 @@ RSpec.describe '`vtk module service` command', type: :cli do
         vtk module service <module name>
 
       Options:
-        -h, [--help], [--no-help]  # Display usage information
+        -h, [--help], [--no-help]              # Display usage information
+        -n, [--component-name=COMPONENT_NAME]  # Specify the service name
 
       Add new service class to a module in vets-api
     OUT
