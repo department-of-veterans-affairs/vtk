@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Eric Boehs', 'Lindsey Hattamer', 'Travis Hilton']
   spec.email         = ['eric.boehs@oddball.io', 'lindsey.hattamer@oddball.io', 'travis.hilton@oddball.io']
 
-  spec.summary       = 'A CLI for the VSP platform'
-  spec.description   = 'This is a CLI tool for the VSP platform for developer usage'
-  spec.homepage      = 'https://github.com/department-of-veterans-affairs/vsp-toolkit'
+  spec.summary       = 'A CLI for the platform'
+  spec.description   = 'This is a platform CLI tool for VFS developer usage.'
+  spec.homepage      = 'https://github.com/department-of-veterans-affairs/vtk'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
 
   spec.metadata['homepage_uri'] = spec.homepage

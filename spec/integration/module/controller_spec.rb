@@ -8,7 +8,8 @@ RSpec.describe '`vtk module controller` command', type: :cli do
         vtk module controller <module name>
 
       Options:
-        -h, [--help], [--no-help]  # Display usage information
+        -h, [--help], [--no-help]              # Display usage information
+        -n, [--component-name=COMPONENT_NAME]  # Specify the controller name
 
       Add new controller to a module in vets-api
     OUT

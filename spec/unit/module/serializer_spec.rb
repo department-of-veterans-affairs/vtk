@@ -10,7 +10,7 @@ RSpec.describe Vtk::Commands::Module::Serializer do
     command = Vtk::Commands::Module::Serializer.new(name, options)
 
     allow(command).to receive :create_serializer
-    expect(command).to receive(:create_serializer).with 'foo'
+    expect(command).to receive(:create_serializer).with 'foo', {}
 
     command.execute _output: output
   end

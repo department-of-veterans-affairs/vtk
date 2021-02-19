@@ -10,7 +10,7 @@ RSpec.describe Vtk::Commands::Module::Controller do
     command = Vtk::Commands::Module::Controller.new(name, options)
 
     allow(command).to receive :create_controller
-    expect(command).to receive(:create_controller).with 'foo'
+    expect(command).to receive(:create_controller).with 'foo', {}
 
     command.execute _output: output
   end
