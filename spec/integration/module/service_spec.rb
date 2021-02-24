@@ -5,11 +5,11 @@ RSpec.describe '`vtk module service` command', type: :cli do
     output = `vtk module help service`
     expected_output = <<~OUT
       Usage:
-        vtk module service <module name>
+        vtk module service <component name> -m, --module-name=MODULE_NAME
 
       Options:
-        -h, [--help], [--no-help]              # Display usage information
-        -n, [--component-name=COMPONENT_NAME]  # Specify the service name
+        -h, [--help], [--no-help]      # Display usage information
+        -m, --module-name=MODULE_NAME  # Specify the module name
 
       Add new service class to a module in vets-api
     OUT

@@ -8,9 +8,9 @@ module Vtk
     class Module < Thor
       namespace :module
 
-      desc 'service <module name>', 'Add new service class to a module in vets-api'
+      desc 'service <component name>', 'Add new service class to a module in vets-api'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
-      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the service name'
+      method_option :module_name, aliases: '-m', type: :string, desc: 'Specify the module name', required: true
       def service(name)
         if options[:help]
           invoke :help, ['service']
@@ -20,9 +20,9 @@ module Vtk
         end
       end
 
-      desc 'serializer <module name>', 'Add new serializer to a module in vets-api'
+      desc 'serializer <component name>', 'Add new serializer to a module in vets-api'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
-      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the serializer name'
+      method_option :module_name, aliases: '-m', type: :string, desc: 'Specify the module name', required: true
       def serializer(name)
         if options[:help]
           invoke :help, ['serializer']
@@ -32,9 +32,9 @@ module Vtk
         end
       end
 
-      desc 'model <module name>', 'Add new model to a module in vets-api'
+      desc 'model <component name>', 'Add new model to a module in vets-api'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
-      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the model name'
+      method_option :module_name, aliases: '-m', type: :string, desc: 'Specify the module name', required: true
       def model(name)
         if options[:help]
           invoke :help, ['model']
@@ -44,9 +44,9 @@ module Vtk
         end
       end
 
-      desc 'controller <module name>', 'Add new controller to a module in vets-api'
+      desc 'controller <component name>', 'Add new controller to a module in vets-api'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
-      method_option :component_name, aliases: '-n', type: :string, desc: 'Specify the controller name'
+      method_option :module_name, aliases: '-m', type: :string, desc: 'Specify the module name', required: true
       def controller(name)
         if options[:help]
           invoke :help, ['controller']
