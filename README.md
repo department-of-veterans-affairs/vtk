@@ -1,6 +1,6 @@
 # Platform Developer Toolkit
 
-The purpose of this gem is to allow engineers to quickly begin developing on VA.gov. It does this by providing a command line interface that allows the use of simple commands and parameters to do everything from setting up a development environment to building out a directory structure and creating necessary files for separating code into its own module.
+The purpose of this gem is to allow engineers to quickly begin developing APIs on VA.gov. It does this by providing a command line interface that allows the use of simple commands and parameters to do everything from setting up a development environment to building out a directory structure and creating necessary files for separating code into its own module.
 
 *The following assumes you have Ruby 2.6.6 or higher installed*
 
