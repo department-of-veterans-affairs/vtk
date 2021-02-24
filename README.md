@@ -1,4 +1,4 @@
-# Platform Developer Toolkit
+# VFS Toolkit
 
 The purpose of this gem is to allow engineers to quickly begin developing on VA.gov. It does this by providing a command line interface that allows the use of simple commands and parameters to do everything from setting up a development environment to building out a directory structure and creating necessary files for separating code into its own module.
 
