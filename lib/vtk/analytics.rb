@@ -8,8 +8,6 @@ require 'uri'
 module Vtk
   # Provides command analytics to VTK team
   class Analytics
-    CLIENT_KEY = ''
-
     attr_reader :name, :args, :hostname
 
     def initialize(name:, args: nil, hostname: nil)
@@ -31,8 +29,8 @@ module Vtk
     end
 
     def emit_point
-      uri = URI.parse "https://api.datadoghq.com/api/v1/series?api_key=#{CLIENT_KEY}"
-      Net::HTTP.start uri.host, uri.port, use_ssl: true do |http|
+      uri = URI.parse 'https://dev.va.gov/_vfs/vtk-analytics/record'
+      Net::HTTP.start uri.host, uri.port, use_ssl: uri.scheme == 'https' do |http|
         request = Net::HTTP::Post.new uri, 'Content-Type' => 'application/json'
         request.body = { series: [point] }.to_json
         http.request request
