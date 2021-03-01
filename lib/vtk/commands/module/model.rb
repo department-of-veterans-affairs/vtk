@@ -23,8 +23,8 @@ module Vtk
         private
 
         def create_model(name, options)
-          component_name = options[:component_name] || name
-          system("rails g module_component #{name} method:model component_name:#{component_name}")
+          module_name = options[:module_name]
+          system("rails g module_component #{module_name} method:model component_name:#{name}")
         end
       end
     end

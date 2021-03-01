@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.5.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.5.0) (2021-02-19)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.4.0...v0.5.0)
+
+## [v0.4.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.4.0) (2021-02-19)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.3.0...v0.4.0)
+
+**Merged pull requests:**
+
+- Added the ability to specify a name when creating a component \(i.e. controller, model, etc.\) [\#14](https://github.com/department-of-veterans-affairs/vtk/pull/14) ([thilton-oddball](https://github.com/thilton-oddball))
+
 ## [v0.3.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.3.0) (2021-02-16)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.6...v0.3.0)
