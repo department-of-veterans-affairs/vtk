@@ -1,5 +1,26 @@
 # Changelog
 
+## [Unreleased](https://github.com/department-of-veterans-affairs/vtk/tree/HEAD)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.8.0...HEAD)
+
+**Merged pull requests:**
+
+- Command Analytics [\#8](https://github.com/department-of-veterans-affairs/vtk/pull/8) ([ericboehs](https://github.com/ericboehs))
+
+## [v0.8.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.8.0) (2021-03-01)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.7.0...v0.8.0)
+
+**Merged pull requests:**
+
+- Updating name [\#17](https://github.com/department-of-veterans-affairs/vtk/pull/17) ([alexpappasoddball](https://github.com/alexpappasoddball))
+- Made changes to how the arguments are handled [\#15](https://github.com/department-of-veterans-affairs/vtk/pull/15) ([thilton-oddball](https://github.com/thilton-oddball))
+
+## [v0.7.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.7.0) (2021-03-01)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.5.0...v0.7.0)
+
 ## [v0.5.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.5.0) (2021-02-19)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.4.0...v0.5.0)
@@ -59,6 +80,7 @@
 **Merged pull requests:**
 
 - fixing markdown in README … [\#3](https://github.com/department-of-veterans-affairs/vtk/pull/3) ([thilton-oddball](https://github.com/thilton-oddball))
+- Open Jenkins [\#1](https://github.com/department-of-veterans-affairs/vtk/pull/1) ([cvalarida](https://github.com/cvalarida))
 
 ## [v0.1.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.1.0) (2021-01-04)
 
@@ -71,10 +93,6 @@
 ## [oclif](https://github.com/department-of-veterans-affairs/vtk/tree/oclif) (2020-08-10)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/79143038509757799edb2bb9be2f925b7d985221...oclif)
-
-**Merged pull requests:**
-
-- Open Jenkins [\#1](https://github.com/department-of-veterans-affairs/vtk/pull/1) ([cvalarida](https://github.com/cvalarida))
 
 
 
