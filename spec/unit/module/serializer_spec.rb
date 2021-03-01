@@ -14,4 +14,16 @@ RSpec.describe Vtk::Commands::Module::Serializer do
 
     command.execute _output: output
   end
+
+  it 'fails `module serializer` command when module_name is not included' do
+    output = "No value provided for required options '--module-name'"
+    name = 'bar'
+    options = {}
+    command = Vtk::Commands::Module::Serializer.new(name, options)
+
+    allow(command).to receive :create_serializer
+    expect(command).to receive(:create_serializer).with('bar', {}).and_return(output)
+
+    command.execute
+  end
 end

@@ -14,4 +14,16 @@ RSpec.describe Vtk::Commands::Module::Service do
 
     command.execute _output: output
   end
+
+  it 'fails `module service` command when module_name is not included' do
+    output = "No value provided for required options '--module-name'"
+    name = 'bar'
+    options = {}
+    command = Vtk::Commands::Module::Service.new(name, options)
+
+    allow(command).to receive :create_service
+    expect(command).to receive(:create_service).with('bar', {}).and_return(output)
+
+    command.execute
+  end
 end
