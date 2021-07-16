@@ -11,10 +11,12 @@ module Vtk
       desc 'setup', 'Configures local machine for VA SOCKS access'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
+      method_option :boot_script_path, type: :string, desc: 'Path to install boot script (e.g. ~/Library)'
       method_option :ssh_key_path, type: :string, desc: 'Path to SSH key (e.g. ~/.ssh/id_rsa_vagov)'
       method_option :ssh_config_path, type: :string, desc: 'Path to SSH config (e.g. ~/.ssh/config)'
       method_option :port, aliases: '-p', type: :string,
                            desc: 'Port that SOCKS server is running on'
+      method_option :skip_test, type: :boolean, desc: 'Skip testing SOCKS connection'
       def setup(*)
         if options[:help]
           invoke :help, ['setup']

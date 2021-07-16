@@ -3,21 +3,26 @@
 require_relative '../../command'
 require 'tty-prompt'
 require 'fileutils'
-require 'open3'
+require 'erb'
 
 module Vtk
   module Commands
     class Socks
       # Sets up socks access to the VA network
       class Setup < Vtk::Command
-        attr_reader :ssh_config_path, :input, :output, :ssh_key_path, :prompt, :port
+        PROXY_URL = 'https://raw.githubusercontent.com/department-of-veterans-affairs/va.gov-team/master/' \
+          'scripts/socks/proxy.pac'
+
+        attr_reader :ssh_config_path, :input, :output, :boot_script_path, :ssh_key_path, :prompt, :port, :skip_test
 
         def initialize(options)
           @options = options
           @prompt = TTY::Prompt.new interrupt: :exit
           @port = options['port'] || '2001'
+          @boot_script_path = options['boot_script_path'] || "#{ENV['HOME']}/Library"
           @ssh_key_path = options['ssh_key_path'] || "#{ENV['HOME']}/.ssh/id_rsa_vagov"
           @ssh_config_path = options['ssh_config_path'] || "#{ENV['HOME']}/.ssh/config"
+          @skip_test = options['skip_test'] || false
 
           super()
         end
@@ -26,22 +31,24 @@ module Vtk
           @input = input
           @output = output
 
-          check_and_create_key
-          install_ssh_config
-          configure_ssh_config_with_keychain
-          ssh_config_clean_up
-          ssh_agent_add
-          test_connection
-          log 'SOCKS has been setup. Run `vtk socks on` to turn on.'
+          check_ssh_key
+          configure_ssh
+          test_ssh_connection unless skip_test
+
+          system_boot_configured = configure_system_boot
+          configure_system_proxy
+
+          test_http_connection if system_boot_configured && !skip_test
+
+          log 'SOCKS setup complete.'
+          log 'Please run `vtk socks on` to start your SOCKS connection.' unless system_boot_configured
         end
 
         private
 
-        def check_and_create_key
-          return log "#{pretty_ssh_key_path} exists. Skipping." if key_exists?
-          return true unless prompt.yes? '----> SSH Key not found. Create one now?'
+        def check_ssh_key
+          return true if key_exists?
 
-          create_key
           open_key_access_request
           exit
         end
@@ -50,47 +57,24 @@ module Vtk
           File.exist? ssh_key_path
         end
 
-        def create_key
-          Open3.popen3("ssh-keygen -f #{ssh_key_path}") do |stdin, stdout, stderr, wait_thread|
-            Thread.start { IO.copy_stream $stdin, stdin }
-            Thread.start { IO.copy_stream stdout, $stdout }
-            Thread.start { IO.copy_stream stderr, $stderr }
-            wait_thread.join
-          end
-          # $stdin.cooked! ?
-        end
-
         def open_key_access_request
           url = 'https://github.com/department-of-veterans-affairs/va.gov-team/issues/new?' \
             'assignees=&labels=external-request%2C+operations&template=Environment-Access-Request-Template.md&' \
             'title=Access+for+%5Bindividual%5D'
-          `#{macos? ? 'open' : 'xdg-open'} "#{url}"`
-          log "You'll have to wait for access approval before continuing. Once approved, re-run `vtk socks setup`."
+          log "Please create an SSH key using `ssh-keygen -f ~/.ssh/id_rsa_vagov`. You'll have to wait for access " \
+            'approval before continuing. Once approved, re-run `vtk socks setup`.'
+          `#{macos? ? 'open' : 'xdg-open'} "#{url}"` if prompt.yes? 'Open access request form in GitHub?'
         end
 
-        def ssh_config_exists?
-          File.exist? ssh_config_path
-        end
-
-        def ssh_config_configured?
-          return false unless ssh_config_exists?
-          return true unless prompt.yes? "----> #{pretty_ssh_config_path} exists. Check if configured correctly?"
-
-          download_ssh_config
-          ssh_config_local = File.read ssh_config_path
-          ssh_config = File.read '/tmp/dova-devops/ssh/config'
-          ssh_config_local.include? ssh_config
-        end
-
-        def ssh_config_configured_with_keychain?
-          return false unless ssh_config_exists?
-
-          ssh_config_local = File.readlines ssh_config_path
-          ssh_config_local.grep(/UseKeychain yes/).size.positive?
+        def configure_ssh
+          install_ssh_config
+          configure_ssh_config_with_keychain
+          ssh_config_clean_up
+          ssh_agent_add
         end
 
         def install_ssh_config
-          return log "#{pretty_ssh_config_path} configured." if ssh_config_configured?
+          return true if ssh_config_configured?
           return true unless prompt.yes? "----> #{pretty_ssh_config_path} missing or incomplete. Install/replace now?"
 
           ssh_dir = File.dirname ssh_config_path
@@ -103,12 +87,55 @@ module Vtk
           FileUtils.chmod 0o600, "#{ssh_dir}/config"
         end
 
+        def ssh_config_configured?
+          return false unless ssh_config_exists?
+
+          download_ssh_config
+          ssh_config_local = File.read ssh_config_path
+          ssh_config = File.read '/tmp/dova-devops/ssh/config'
+          ssh_config_local.include? ssh_config
+        end
+
+        def ssh_config_exists?
+          File.exist? ssh_config_path
+        end
+
+        def download_ssh_config
+          install_brew
+          log 'Downloading and checking ssh/config...'
+
+          ssh_config_clean_up
+
+          repo_url = 'https://github.com/department-of-veterans-affairs/devops.git'
+          cloned = system(
+            "git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} '/tmp/dova-devops'"
+          )
+          exit 1 unless cloned
+
+          `cd /tmp/dova-devops; git checkout master -- ssh/config`
+        end
+
+        def install_brew
+          return false unless macos?
+
+          installed = !`command -v brew`.empty?
+          return true if installed
+
+          log 'Homebrew not installed. Please install and try again.'
+          `open "https://brew.sh"` if prompt.yes? 'Open https://brew.sh for installation instructions?'
+          exit 1
+        end
+
+        def ssh_config_clean_up
+          FileUtils.rm_rf '/tmp/dova-devops'
+        end
+
         def backup_existing_ssh_config
           return true unless File.exist? ssh_config_path
 
           if File.exist? "#{ssh_config_path}.bak"
-            log "ERROR: Could not make backup of #{pretty_ssh_config_path} as #{pretty_ssh_config_path}.bak exists. " \
-              'Aborting.'
+            log "!!! ERROR: Could not make backup of #{pretty_ssh_config_path} as #{pretty_ssh_config_path}.bak " \
+              'exists. Aborting.'
             exit 1
           end
 
@@ -132,16 +159,11 @@ module Vtk
           IO.write ssh_config_path, keychain_config, mode: 'a'
         end
 
-        def download_ssh_config
-          log 'Downloading ssh/config.'
+        def ssh_config_configured_with_keychain?
+          return false unless ssh_config_exists?
 
-          repo_url = 'https://github.com/department-of-veterans-affairs/devops.git'
-          `git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} /tmp/dova-devops`
-          `cd /tmp/dova-devops; git checkout master -- ssh/config`
-        end
-
-        def ssh_config_clean_up
-          FileUtils.rm_rf '/tmp/dova-devops'
+          ssh_config_local = File.readlines ssh_config_path
+          ssh_config_local.grep(/UseKeychain yes/).size.positive?
         end
 
         def ssh_agent_add
@@ -153,17 +175,122 @@ module Vtk
           end
         end
 
-        def test_connection
-          return true unless prompt.yes? '----> Test SOCKS connection now?'
+        def test_ssh_connection
+          output.print '----> Testing SOCKS SSH connection...'
+
+          add_ip_to_known_hosts
 
           ssh_output = `ssh -F #{ssh_config_path} -o ConnectTimeout=5 -q socks -D #{port} exit`.chomp
           if ssh_output == 'This account is currently not available.'
-            log 'SSH Connection to SOCKS server successful.'
+            output.puts ' ✅'
           else
-            log 'ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
+            output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
             output.puts `ssh -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N`
             exit 1
           end
+        end
+
+        def add_ip_to_known_hosts
+          jump_box_ip = `grep -A 2 'Host socks' ~/.ssh/config | grep ProxyCommand | awk '{print $6}'`.chomp
+          socks_ip = `grep -A 2 'Host socks' ~/.ssh/config | grep HostName | awk '{print $2}'`.chomp
+
+          `ssh-keygen -R #{jump_box_ip}` if File.exist? '~/.ssh/known_hosts'
+          `ssh-keygen -R #{socks_ip}` if File.exist? '~/.ssh/known_hosts'
+          `ssh-keyscan -H #{jump_box_ip} >> ~/.ssh/known_hosts 2> /dev/null`
+          `ssh -i #{ssh_key_path} dsva@#{jump_box_ip} 'ssh-keyscan -H #{socks_ip}' >> ~/.ssh/known_hosts 2> /dev/null`
+        end
+
+        def configure_system_boot
+          return false unless macos?
+          return true unless `launchctl list | grep #{launch_agent_label}`.empty?
+          return false unless prompt.yes? '----> Start SOCKS on system boot?'
+
+          install_autossh
+          install_launch_agent
+        end
+
+        def launch_agent_label
+          @launch_agent_label ||= begin
+            launch_agent_label = 'gov.va.socks'
+            launch_agent_label += "-test-#{rand 1000}" if ENV['TEST'] == 'test'
+            launch_agent_label
+          end
+        end
+
+        def install_autossh
+          installed = !`command -v autossh`.empty?
+          return true if installed
+
+          return false unless prompt.yes? '----> Autossh missing. Install now via brew?'
+
+          `brew install autossh`
+        end
+
+        def install_launch_agent
+          unless File.exist? "#{boot_script_path}/LaunchAgents/gov.va.socks.plist"
+            FileUtils.mkdir_p "#{boot_script_path}/Logs/autossh"
+            FileUtils.mkdir_p "#{boot_script_path}/LaunchAgents"
+
+            write_launch_agent
+          end
+
+          `launchctl load -w #{boot_script_path}/LaunchAgents/gov.va.socks.plist`
+        end
+
+        def write_launch_agent
+          erb_template = File.read "#{__dir__}/gov.va.socks.plist.erb"
+          erb = ERB.new erb_template
+          launch_agent_contents = erb.result(
+            launch_agent_variables.instance_eval { binding }
+          )
+          File.write "#{boot_script_path}/LaunchAgents/gov.va.socks.plist", launch_agent_contents
+        end
+
+        def launch_agent_variables
+          OpenStruct.new(
+            label: launch_agent_label,
+            autossh_path: `which autossh`.chomp,
+            port: @port,
+            boot_script_path: File.realpath(boot_script_path),
+            user: ENV['USER']
+          )
+        end
+
+        def configure_system_proxy
+          return false unless macos?
+          return log 'Skipping system proxy configuration as custom --port was used.' unless port == '2001'
+          return true if system_proxy_already_configured?
+          return false unless prompt.yes? '----> Configure SOCKS as system proxy?'
+
+          network_interfaces.map do |network_interface|
+            `networksetup -setautoproxyurl "#{network_interface}" "#{PROXY_URL}"`
+          end.all?
+        end
+
+        def system_proxy_already_configured?
+          network_interfaces.map do |network_interface|
+            output = `networksetup -getautoproxyurl "#{network_interface}"`
+            output == "URL: #{PROXY_URL}\nEnabled: Yes\n"
+          end.all?
+        end
+
+        def network_interfaces
+          `networksetup -listallnetworkservices`.split("\n").drop(1)
+        end
+
+        def test_http_connection
+          output.print '----> Testing SOCKS HTTP connection...'
+
+          success = 5.times.map do
+            sleep 1
+            not_connected = system "nscurl http://grafana.vfs.va.gov 2>&1 | grep -q 'hostname could not be found'"
+
+            break [true] unless not_connected
+          end.all?
+
+          output.puts success ? ' ✅' : ' ❌ ERROR: SOCKS connection failed HTTP test.'
+
+          exit 1 unless success
         end
 
         def macos?
