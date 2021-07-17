@@ -35,13 +35,12 @@ module Vtk
           configure_ssh
           test_ssh_connection unless skip_test
 
-          system_boot_configured = configure_system_boot
+          configure_system_boot
           configure_system_proxy
 
-          test_http_connection if system_boot_configured && !skip_test
+          test_http_connection unless skip_test
 
           log 'SOCKS setup complete.'
-          log 'Please run `vtk socks on` to start your SOCKS connection.' unless system_boot_configured
         end
 
         private
@@ -75,16 +74,18 @@ module Vtk
 
         def install_ssh_config
           return true if ssh_config_configured?
-          return true unless prompt.yes? "----> #{pretty_ssh_config_path} missing or incomplete. Install/replace now?"
 
-          ssh_dir = File.dirname ssh_config_path
+          if ssh_config_exists? && !prompt.yes?("----> #{pretty_ssh_config_path} incomplete. Backup and replace now?")
+            return false
+          end
+
+          log 'Installing SSH config...'
 
           download_ssh_config unless File.exist? '/tmp/dova-devops'
-          FileUtils.mkdir_p ssh_dir
-          FileUtils.chmod 0o700, ssh_dir
+          create_ssh_directory
           backup_existing_ssh_config
           FileUtils.cp '/tmp/dova-devops/ssh/config', ssh_config_path
-          FileUtils.chmod 0o600, "#{ssh_dir}/config"
+          FileUtils.chmod 0o600, "#{File.dirname ssh_config_path}/config"
         end
 
         def ssh_config_configured?
@@ -102,7 +103,6 @@ module Vtk
 
         def download_ssh_config
           install_brew
-          log 'Downloading and checking ssh/config...'
 
           ssh_config_clean_up
 
@@ -142,10 +142,15 @@ module Vtk
           FileUtils.mv ssh_config_path, "#{ssh_config_path}.bak"
         end
 
+        def create_ssh_directory
+          ssh_dir = File.dirname ssh_config_path
+          FileUtils.mkdir_p ssh_dir
+          FileUtils.chmod 0o700, ssh_dir
+        end
+
         def configure_ssh_config_with_keychain
           return unless macos?
           return if ssh_config_configured_with_keychain?
-          return true unless prompt.yes? "----> #{pretty_ssh_config_path} missing Keychain configuration. Add now?"
 
           keychain_config = <<~CFG
 
@@ -203,10 +208,11 @@ module Vtk
         def configure_system_boot
           return false unless macos?
           return true unless `launchctl list | grep #{launch_agent_label}`.empty?
-          return false unless prompt.yes? '----> Start SOCKS on system boot?'
 
-          install_autossh
-          install_launch_agent
+          log 'Configuring SOCKS tunnel to run on system boot...' do
+            install_autossh
+            install_launch_agent
+          end
         end
 
         def launch_agent_label
@@ -221,7 +227,7 @@ module Vtk
           installed = !`command -v autossh`.empty?
           return true if installed
 
-          return false unless prompt.yes? '----> Autossh missing. Install now via brew?'
+          log '----> Autossh missing. Installing via Homebrew.'
 
           `brew install autossh`
         end
@@ -260,11 +266,12 @@ module Vtk
           return false unless macos?
           return log 'Skipping system proxy configuration as custom --port was used.' unless port == '2001'
           return true if system_proxy_already_configured?
-          return false unless prompt.yes? '----> Configure SOCKS as system proxy?'
 
-          network_interfaces.map do |network_interface|
-            `networksetup -setautoproxyurl "#{network_interface}" "#{PROXY_URL}"`
-          end.all?
+          log 'Configuring system proxy to use SOCKS tunnel...' do
+            network_interfaces.map do |network_interface|
+              system %(networksetup -setautoproxyurl "#{network_interface}" "#{PROXY_URL}")
+            end.all?
+          end
         end
 
         def system_proxy_already_configured?
@@ -275,7 +282,11 @@ module Vtk
         end
 
         def network_interfaces
-          `networksetup -listallnetworkservices`.split("\n").drop(1)
+          @network_interfaces ||= begin
+            `networksetup -listallnetworkservices`.split("\n").drop(1).select do |network_interface|
+              `networksetup -getautoproxyurl "#{network_interface}"`.start_with?('URL: (null)')
+            end
+          end
         end
 
         def test_http_connection
@@ -318,7 +329,17 @@ module Vtk
         end
 
         def log(message)
-          output.puts "----> #{message}"
+          if block_given?
+            output.print "----> #{message}"
+
+            return_value = yield
+
+            output.puts return_value ? ' ✅' : ' ❌'
+
+            return_value
+          else
+            output.puts "----> #{message}"
+          end
         end
       end
     end

@@ -67,33 +67,15 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
     it 'requires an ssh key to already be configured' do
       skip 'CI environment does not have SOCKS access' if ENV['CI']
 
-      cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key --port 20002'
+      cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key'
       output = run_and_answer cmd, []
 
       expect(output[0]).to eq(
         "----> Please create an SSH key using `ssh-keygen -f ~/.ssh/id_rsa_vagov`. You'll have to wait for access " \
         'approval before continuing. Once approved, re-run `vtk socks setup`.'
       )
-    end
-
-    it 'succesfully says no to every answer' do
-      skip 'CI environment does not have SOCKS access' if ENV['CI']
-
-      `touch tmp/ssh/key; touch tmp/ssh/config`
-      cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key --skip-test'
-      output = run_and_answer cmd, [
-        'n', # Install ssh/config?
-        'n', # Add Keychain config?
-        'n', # Start on system boot?
-        'n'  # Configure system proxy?
-      ]
-
-      expect(output[3]).to eq('----> tmp/ssh/config missing or incomplete. Install/replace now? no')
-      expect(output[6]).to eq('----> tmp/ssh/config missing Keychain configuration. Add now? no')
-      expect(output[9]).to eq('----> Start SOCKS on system boot? no')
-      expect(output[12]).to eq('----> Configure SOCKS as system proxy? no')
-      expect(output[13]).to eq('----> SOCKS setup complete.')
-      expect(output[14]).to eq('----> Please run `vtk socks on` to start your SOCKS connection.')
+      expect(output[1]).to eq('Open access request form in GitHub? (Y/n) ')
+      expect(output[2]).to eq('Open access request form in GitHub? Yes')
     end
 
     it 'succesfully sets everything up' do
@@ -102,23 +84,16 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       `cp ~/.ssh/id_rsa_vagov tmp/ssh/key`
       cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key ' \
         '--boot-script-path tmp/ssh'
-      output = run_and_answer cmd, [
-        'y', # Install ssh/config?
-        'y', # Install keychain config?
-        'y', # Start on system boot?
-        'y'  # Configure system proxy?
-      ]
+      output = run_and_answer cmd, []
 
       `launchctl unload -w tmp/ssh/LaunchAgents/gov.va.socks.plist`
 
-      expect(output[2]).to eq('----> tmp/ssh/config missing or incomplete. Install/replace now? Yes')
-      expect(output[3]).to eq('----> Downloading and checking ssh/config...')
-      expect(output[6]).to eq('----> tmp/ssh/config missing Keychain configuration. Add now? Yes')
-      expect(output[7]).to eq('----> Testing SOCKS SSH connection... ✅')
-      expect(output[10]).to eq('----> Start SOCKS on system boot? Yes')
-      expect(output[13]).to eq('----> Configure SOCKS as system proxy? Yes')
-      expect(output[14]).to eq('----> Testing SOCKS HTTP connection... ✅')
-      expect(output[15]).to eq('----> SOCKS setup complete.')
+      expect(output[0]).to eq('----> Installing SSH config...')
+      expect(output[1]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[2]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
+      expect(output[3]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
+      expect(output[4]).to eq('----> Testing SOCKS HTTP connection... ✅')
+      expect(output[5]).to eq('----> SOCKS setup complete.')
     end
   end
 end
