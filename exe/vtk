@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib_path) unless $LOAD_PATH.include?(lib_path)
 require 'vtk/cli'
 
 Signal.trap('INT') do
-  warn("\n#{caller.join("\n")}: interrupted")
+  warn("\n#{caller.join("\n")}: interrupted") if ENV['DEBUG']
   exit(1)
 end
 
