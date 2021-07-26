@@ -57,12 +57,26 @@ module Vtk
         end
 
         def open_key_access_request
-          url = 'https://github.com/department-of-veterans-affairs/va.gov-team/issues/new?' \
+          log 'VA key missing. Generating now...'
+          keygen_status = system "ssh-keygen -f #{ssh_key_path} #{'-N ""' if ENV['TEST']}"
+          log 'Key generation aborted. Exiting...' and exit 1 unless keygen_status
+
+          if prompt.yes? copy_and_open_gh
+            IO.popen('pbcopy', 'w') { |f| f << File.read("#{ssh_key_path}.pub") }
+            `#{macos? ? 'open' : 'xdg-open'} "#{access_request_template_url}"`
+          end
+          log 'Please re-run `vtk socks setup` once the key has been approved.'
+        end
+
+        def access_request_template_url
+          'https://github.com/department-of-veterans-affairs/va.gov-team/issues/new?' \
             'assignees=&labels=external-request%2C+operations&template=Environment-Access-Request-Template.md&' \
             'title=Access+for+%5Bindividual%5D'
-          log "Please create an SSH key using `ssh-keygen -f ~/.ssh/id_rsa_vagov`. You'll have to wait for access " \
-            'approval before continuing. Once approved, re-run `vtk socks setup`.'
-          `#{macos? ? 'open' : 'xdg-open'} "#{url}"` if prompt.yes? 'Open access request form in GitHub?'
+        end
+
+        def copy_and_open_gh
+          '----> An SSH key has been created. Would you like to copy the key to your clipboard and open the access ' \
+            'request issue in GitHub now?'
         end
 
         def configure_ssh
@@ -121,9 +135,8 @@ module Vtk
           installed = !`command -v brew`.empty?
           return true if installed
 
-          log 'Homebrew not installed. Please install and try again.'
-          `open "https://brew.sh"` if prompt.yes? 'Open https://brew.sh for installation instructions?'
-          exit 1
+          log 'Homebrew not installed. Installing now...'
+          system '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         end
 
         def ssh_config_clean_up
@@ -210,8 +223,7 @@ module Vtk
           return true unless `launchctl list | grep #{launch_agent_label}`.empty?
 
           log 'Configuring SOCKS tunnel to run on system boot...' do
-            install_autossh
-            install_launch_agent
+            install_autossh && install_launch_agent
           end
         end
 
@@ -227,9 +239,7 @@ module Vtk
           installed = !`command -v autossh`.empty?
           return true if installed
 
-          log '----> Autossh missing. Installing via Homebrew.'
-
-          `brew install autossh`
+          system 'brew install autossh'
         end
 
         def install_launch_agent
@@ -240,7 +250,7 @@ module Vtk
             write_launch_agent
           end
 
-          `launchctl load -w #{boot_script_path}/LaunchAgents/gov.va.socks.plist`
+          system "launchctl load -w #{boot_script_path}/LaunchAgents/gov.va.socks.plist"
         end
 
         def write_launch_agent

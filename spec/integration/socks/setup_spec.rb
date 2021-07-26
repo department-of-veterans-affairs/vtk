@@ -69,13 +69,28 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
 
       cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key'
       output = run_and_answer cmd, []
+      index = output.length - 4
 
-      expect(output[0]).to eq(
-        "----> Please create an SSH key using `ssh-keygen -f ~/.ssh/id_rsa_vagov`. You'll have to wait for access " \
-        'approval before continuing. Once approved, re-run `vtk socks setup`.'
-      )
-      expect(output[1]).to eq('Open access request form in GitHub? (Y/n) ')
-      expect(output[2]).to eq('Open access request form in GitHub? Yes')
+      expect(output[0]).to eq('----> VA key missing. Generating now...')
+      expect(output[1]).to eq('Generating public/private rsa key pair.')
+      expect(output[2]).to eq('Your identification has been saved in tmp/ssh/key.')
+      expect(output[3]).to eq('Your public key has been saved in tmp/ssh/key.pub.')
+      expect(output[4]).to eq('The key fingerprint is:')
+      expect(output[5]).to start_with('SHA256:')
+      expect(output[6]).to eq("The key's randomart image is:")
+      expect(output[7]).to eq('+---[RSA 3072]----+')
+      expect(output[8]).to start_with('|')
+      expect(output[9]).to start_with('|')
+      expect(output[10]).to start_with('|')
+      expect(output[11]).to start_with('|')
+      expect(output[12]).to start_with('|')
+      expect(output[13]).to start_with('|')
+      expect(output[14]).to start_with('|')
+      expect(output[15]).to start_with('|')
+      expect(output[index]).to eq('+----[SHA256]-----+')
+      expect(output[index + 1]).to start_with('----> An SSH key has been created. Would you like to copy the key to ')
+      expect(output[index + 2]).to start_with('----> An SSH key has been created. Would you like to copy the key to ')
+      expect(output[index + 3]).to eq('----> Please re-run `vtk socks setup` once the key has been approved.')
     end
 
     it 'succesfully sets everything up' do
