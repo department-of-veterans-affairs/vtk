@@ -35,10 +35,12 @@ module Vtk
           check_ssh_key
           ssh_agent_add
 
+          test_ssh_connection unless skip_test
+
           configure_system_boot
           configure_system_proxy
 
-          test_connection unless skip_test
+          test_http_connection unless skip_test
 
           log 'SOCKS setup complete.'
         end
@@ -53,6 +55,10 @@ module Vtk
 
         def key_exists?
           File.exist? ssh_key_path
+        end
+
+        def public_key_exists?
+          File.exist? "#{ssh_key_path}.pub"
         end
 
         def generate_key_and_open_key_access_request
@@ -147,7 +153,7 @@ module Vtk
         end
 
         def backup_existing_ssh_config
-          return true unless File.exist? ssh_config_path
+          return true unless ssh_config_exists?
 
           if File.exist? "#{ssh_config_path}.bak"
             log "!!! ERROR: Could not make backup of #{pretty_ssh_config_path} as #{pretty_ssh_config_path}.bak " \
@@ -188,8 +194,8 @@ module Vtk
         end
 
         def ssh_agent_add
-          FileUtils.chmod 0o600, ssh_key_path if File.exist? ssh_key_path
-          FileUtils.chmod 0o600, "#{ssh_key_path}.pub" if File.exist? "#{ssh_key_path}.pub"
+          FileUtils.chmod 0o600, ssh_key_path if key_exists?
+          FileUtils.chmod 0o600, "#{ssh_key_path}.pub" if public_key_exists?
 
           if macos?
             `ssh-add -K 2> /dev/null; ssh-add -K #{ssh_key_path} 2> /dev/null`
@@ -197,11 +203,6 @@ module Vtk
             `[ -z "$SSH_AUTH_SOCK" ] && eval "$(ssh-agent -s)";
               ssh-add 2> /dev/null; ssh-add #{ssh_key_path} 2> /dev/null`
           end
-        end
-
-        def test_connection
-          test_ssh_connection
-          test_http_connection unless skip_test
         end
 
         def test_ssh_connection
@@ -232,8 +233,7 @@ module Vtk
         def check_ssh_error(ssh_output)
           if ssh_output.include? 'Permission denied (publickey)'
             @skip_test = true
-            output.puts "⚠️  WARN: SSH key does not appear to be approved yet. Once it's approved, your SOCKS " \
-              "connection should start working automatically. If it doesn't, please re-run `vtk socks setup`."
+            output.puts '⚠️  WARN: SSH key is not approved yet. Once it is, re-run `vtk socks setup`.'
           else
             ssh_command = "ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N"
             output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'

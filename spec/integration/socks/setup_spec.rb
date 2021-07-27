@@ -91,9 +91,9 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       expect(output[index]).to eq('+----[SHA256]-----+')
       expect(output[index + 1]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
       expect(output[index + 2]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
-      expect(output[index + 3]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
-      expect(output[index + 4]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
-      expect(output[index + 5]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[index + 3]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[index + 4]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
+      expect(output[index + 5]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
       expect(output[index + 6]).to eq('----> Testing SOCKS HTTP connection... ✅')
       expect(output[index + 7]).to eq('----> SOCKS setup complete.')
     end
@@ -109,9 +109,9 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       `launchctl unload -w tmp/ssh/LaunchAgents/gov.va.socks.plist`
 
       expect(output[0]).to eq('----> Installing SSH config...')
-      expect(output[1]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
-      expect(output[2]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
-      expect(output[3]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[1]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[2]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
+      expect(output[3]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
       expect(output[4]).to eq('----> Testing SOCKS HTTP connection... ✅')
       expect(output[5]).to eq('----> SOCKS setup complete.')
     end
