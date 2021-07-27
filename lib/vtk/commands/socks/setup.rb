@@ -185,6 +185,8 @@ module Vtk
         end
 
         def ssh_agent_add
+          FileUtils.chmod 0o600, Dir.glob("#{File.dirname ssh_key_path}/*")
+
           if macos?
             `ssh-add -K 2> /dev/null; ssh-add -K #{ssh_key_path} 2> /dev/null`
           elsif ubuntu?
@@ -198,12 +200,12 @@ module Vtk
 
           add_ip_to_known_hosts
 
-          ssh_output = `ssh -F #{ssh_config_path} -o ConnectTimeout=5 -q socks -D #{port} exit`.chomp
-          if ssh_output == 'This account is currently not available.'
+          ssh_output = `ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -q socks -D #{port} exit 2>&1`
+
+          if ssh_output.include? 'This account is currently not available.'
             output.puts ' ✅'
           else
-            output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
-            output.puts `ssh -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N`
+            check_ssh_error ssh_output
             exit 1
           end
         end
@@ -218,9 +220,22 @@ module Vtk
           `ssh -i #{ssh_key_path} dsva@#{jump_box_ip} 'ssh-keyscan -H #{socks_ip}' >> ~/.ssh/known_hosts 2> /dev/null`
         end
 
+        def check_ssh_error(ssh_output)
+          if ssh_output.include? 'Permission denied (publickey)'
+            output.puts ' ❌ ERROR: SSH key does not appear to be approved.'
+          else
+            ssh_command = "ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N"
+            output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
+            output.puts ssh_command
+            output.puts `#{ssh_command}`
+          end
+        end
+
         def configure_system_boot
           return false unless macos?
-          return true unless `launchctl list | grep #{launch_agent_label}`.empty?
+
+          la_output = `launchctl list | grep #{launch_agent_label}`
+          return true if !la_output.empty? && !la_output.start_with?('-')
 
           log 'Configuring SOCKS tunnel to run on system boot...' do
             install_autossh && install_launch_agent
@@ -250,6 +265,7 @@ module Vtk
             write_launch_agent
           end
 
+          system "launchctl unload #{boot_script_path}/LaunchAgents/gov.va.socks.plist 2> /dev/null"
           system "launchctl load -w #{boot_script_path}/LaunchAgents/gov.va.socks.plist"
         end
 
