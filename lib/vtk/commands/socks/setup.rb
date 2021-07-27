@@ -31,14 +31,14 @@ module Vtk
           @input = input
           @output = output
 
+          setup_ssh_config
           check_ssh_key
-          configure_ssh
-          test_ssh_connection unless skip_test
+          ssh_agent_add
 
           configure_system_boot
           configure_system_proxy
 
-          test_http_connection unless skip_test
+          test_connection unless skip_test
 
           log 'SOCKS setup complete.'
         end
@@ -48,24 +48,28 @@ module Vtk
         def check_ssh_key
           return true if key_exists?
 
-          open_key_access_request
-          exit
+          generate_key_and_open_key_access_request
         end
 
         def key_exists?
           File.exist? ssh_key_path
         end
 
-        def open_key_access_request
+        def generate_key_and_open_key_access_request
           log 'VA key missing. Generating now...'
-          keygen_status = system "ssh-keygen -f #{ssh_key_path} #{'-N ""' if ENV['TEST']}"
-          log 'Key generation aborted. Exiting...' and exit 1 unless keygen_status
+          system "ssh-keygen -f #{ssh_key_path} #{'-N ""' if ENV['TEST']}"
 
-          if prompt.yes? copy_and_open_gh
-            IO.popen('pbcopy', 'w') { |f| f << File.read("#{ssh_key_path}.pub") }
-            `#{macos? ? 'open' : 'xdg-open'} "#{access_request_template_url}"`
+          if prompt.yes?(copy_and_open_gh)
+            copy_key_to_clipboard
+            `open "#{access_request_template_url}"`
+          else
+            log "You'll need to submit ~/.ssh/id_rsa_vagov.pub for approval to: #{access_request_template_url}."
+            exit 1 unless prompt.yes? 'Continue setup?'
           end
-          log 'Please re-run `vtk socks setup` once the key has been approved.'
+        end
+
+        def copy_key_to_clipboard
+          IO.popen('pbcopy', 'w') { |f| f << File.read("#{ssh_key_path}.pub") }
         end
 
         def access_request_template_url
@@ -79,11 +83,10 @@ module Vtk
             'request issue in GitHub now?'
         end
 
-        def configure_ssh
+        def setup_ssh_config
           install_ssh_config
           configure_ssh_config_with_keychain
           ssh_config_clean_up
-          ssh_agent_add
         end
 
         def install_ssh_config
@@ -185,7 +188,8 @@ module Vtk
         end
 
         def ssh_agent_add
-          FileUtils.chmod 0o600, Dir.glob("#{File.dirname ssh_key_path}/*")
+          FileUtils.chmod 0o600, ssh_key_path if File.exist? ssh_key_path
+          FileUtils.chmod 0o600, "#{ssh_key_path}.pub" if File.exist? "#{ssh_key_path}.pub"
 
           if macos?
             `ssh-add -K 2> /dev/null; ssh-add -K #{ssh_key_path} 2> /dev/null`
@@ -193,6 +197,11 @@ module Vtk
             `[ -z "$SSH_AUTH_SOCK" ] && eval "$(ssh-agent -s)";
               ssh-add 2> /dev/null; ssh-add #{ssh_key_path} 2> /dev/null`
           end
+        end
+
+        def test_connection
+          test_ssh_connection
+          test_http_connection unless skip_test
         end
 
         def test_ssh_connection
@@ -222,7 +231,9 @@ module Vtk
 
         def check_ssh_error(ssh_output)
           if ssh_output.include? 'Permission denied (publickey)'
-            output.puts ' ❌ ERROR: SSH key does not appear to be approved.'
+            @skip_test = true
+            output.puts "⚠️  WARN: SSH key does not appear to be approved yet. Once it's approved, your SOCKS " \
+              "connection should start working automatically. If it doesn't, please re-run `vtk socks setup`."
           else
             ssh_command = "ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N"
             output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
@@ -325,7 +336,7 @@ module Vtk
             break [true] unless not_connected
           end.all?
 
-          output.puts success ? ' ✅' : ' ❌ ERROR: SOCKS connection failed HTTP test.'
+          output.puts success ? ' ✅' : ' ❌ ERROR: SOCKS connection failed HTTP test. Try running setup again.'
 
           exit 1 unless success
         end

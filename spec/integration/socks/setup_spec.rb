@@ -64,22 +64,22 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       `networksetup -setautoproxyurl "#{@network_interface}" "#{@starting_proxy_url}"`
     end
 
-    it 'requires an ssh key to already be configured' do
+    it 'sets everything up without a working key' do
       skip 'CI environment does not have SOCKS access' if ENV['CI']
 
       cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key'
       output = run_and_answer cmd, []
-      index = output.length - 4
+      index = output.length - 8
 
-      expect(output[0]).to eq('----> VA key missing. Generating now...')
-      expect(output[1]).to eq('Generating public/private rsa key pair.')
-      expect(output[2]).to eq('Your identification has been saved in tmp/ssh/key.')
-      expect(output[3]).to eq('Your public key has been saved in tmp/ssh/key.pub.')
-      expect(output[4]).to eq('The key fingerprint is:')
-      expect(output[5]).to start_with('SHA256:')
-      expect(output[6]).to eq("The key's randomart image is:")
-      expect(output[7]).to eq('+---[RSA 3072]----+')
-      expect(output[8]).to start_with('|')
+      expect(output[0]).to eq('----> Installing SSH config...')
+      expect(output[1]).to eq('----> VA key missing. Generating now...')
+      expect(output[2]).to eq('Generating public/private rsa key pair.')
+      expect(output[3]).to eq('Your identification has been saved in tmp/ssh/key.')
+      expect(output[4]).to eq('Your public key has been saved in tmp/ssh/key.pub.')
+      expect(output[5]).to eq('The key fingerprint is:')
+      expect(output[6]).to start_with('SHA256:')
+      expect(output[7]).to eq("The key's randomart image is:")
+      expect(output[8]).to eq('+---[RSA 3072]----+')
       expect(output[9]).to start_with('|')
       expect(output[10]).to start_with('|')
       expect(output[11]).to start_with('|')
@@ -87,13 +87,18 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       expect(output[13]).to start_with('|')
       expect(output[14]).to start_with('|')
       expect(output[15]).to start_with('|')
+      expect(output[16]).to start_with('|')
       expect(output[index]).to eq('+----[SHA256]-----+')
-      expect(output[index + 1]).to start_with('----> An SSH key has been created. Would you like to copy the key to ')
-      expect(output[index + 2]).to start_with('----> An SSH key has been created. Would you like to copy the key to ')
-      expect(output[index + 3]).to eq('----> Please re-run `vtk socks setup` once the key has been approved.')
+      expect(output[index + 1]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
+      expect(output[index + 2]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
+      expect(output[index + 3]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
+      expect(output[index + 4]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
+      expect(output[index + 5]).to eq('----> Testing SOCKS SSH connection... ✅')
+      expect(output[index + 6]).to eq('----> Testing SOCKS HTTP connection... ✅')
+      expect(output[index + 7]).to eq('----> SOCKS setup complete.')
     end
 
-    it 'succesfully sets everything up' do
+    it 'sets everything up with a working key' do
       skip 'CI environment does not have SOCKS access' if ENV['CI']
 
       `cp ~/.ssh/id_rsa_vagov tmp/ssh/key`
@@ -104,9 +109,9 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       `launchctl unload -w tmp/ssh/LaunchAgents/gov.va.socks.plist`
 
       expect(output[0]).to eq('----> Installing SSH config...')
-      expect(output[1]).to eq('----> Testing SOCKS SSH connection... ✅')
-      expect(output[2]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
-      expect(output[3]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
+      expect(output[1]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
+      expect(output[2]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
+      expect(output[3]).to eq('----> Testing SOCKS SSH connection... ✅')
       expect(output[4]).to eq('----> Testing SOCKS HTTP connection... ✅')
       expect(output[5]).to eq('----> SOCKS setup complete.')
     end
