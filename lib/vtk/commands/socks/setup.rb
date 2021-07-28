@@ -129,7 +129,7 @@ module Vtk
 
           ssh_config_clean_up
 
-          repo_url = 'https://github.com/department-of-veterans-affairs/devops.git'
+          ssh_agent_add
           cloned = system(
             "git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} '/tmp/dova-devops'"
           )
@@ -150,6 +150,28 @@ module Vtk
 
         def ssh_config_clean_up
           FileUtils.rm_rf '/tmp/dova-devops'
+        end
+
+        def repo_url
+          @repo_url ||= begin
+            keyscan_github_com
+
+            if github_ssh_configured
+              'git@github.com:department-of-veterans-affairs/devops.git'
+            else
+              'https://github.com/department-of-veterans-affairs/devops.git'
+            end
+          end
+        end
+
+        def keyscan_github_com
+          return true if File.exist?('~/.ssh/known_hosts') && !`ssh-keygen -F github.com`.empty?
+
+          `ssh-keyscan -H github.com >> ~/.ssh/known_hosts 2> /dev/null`
+        end
+
+        def github_ssh_configured
+          !`ssh -T git@github.com 2>&1`.include?('Permission denied')
         end
 
         def backup_existing_ssh_config
@@ -224,8 +246,8 @@ module Vtk
           jump_box_ip = `grep -A 2 'Host socks' ~/.ssh/config | grep ProxyCommand | awk '{print $6}'`.chomp
           socks_ip = `grep -A 2 'Host socks' ~/.ssh/config | grep HostName | awk '{print $2}'`.chomp
 
-          `ssh-keygen -R #{jump_box_ip}` if File.exist? '~/.ssh/known_hosts'
-          `ssh-keygen -R #{socks_ip}` if File.exist? '~/.ssh/known_hosts'
+          return unless `ssh-keygen -F #{socks_ip}`.empty?
+
           `ssh-keyscan -H #{jump_box_ip} >> ~/.ssh/known_hosts 2> /dev/null`
           `ssh -i #{ssh_key_path} dsva@#{jump_box_ip} 'ssh-keyscan -H #{socks_ip}' >> ~/.ssh/known_hosts 2> /dev/null`
         end
