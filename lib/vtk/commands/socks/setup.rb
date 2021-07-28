@@ -245,9 +245,6 @@ module Vtk
         def configure_system_boot
           return false unless macos?
 
-          la_output = `launchctl list | grep #{launch_agent_label}`
-          return true if !la_output.empty? && !la_output.start_with?('-')
-
           log 'Configuring SOCKS tunnel to run on system boot...' do
             install_autossh && install_launch_agent
           end
@@ -281,7 +278,7 @@ module Vtk
         end
 
         def write_launch_agent
-          erb_template = File.read "#{__dir__}/gov.va.socks.plist.erb"
+          erb_template = File.read File.realpath "#{__dir__}/../../templates/socks/setup/gov.va.socks.plist.erb"
           erb = ERB.new erb_template
           launch_agent_contents = erb.result(
             launch_agent_variables.instance_eval { binding }
