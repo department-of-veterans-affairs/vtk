@@ -1,0 +1,12 @@
+[Unit]
+Description=VA SOCKS Tunnel
+After=network.target
+
+[Service]
+Environment="AUTOSSH_GATETIME=0"
+ExecStart=<%= autossh_path %> -v -M 0 -D <%= port %> -i <%= ssh_key_path %> socks -N
+Restart=always
+User=<%= user %>
+
+[Install]
+WantedBy=multi-user.target

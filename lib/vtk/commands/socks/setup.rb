@@ -67,7 +67,7 @@ module Vtk
 
           if prompt.yes?(copy_and_open_gh)
             copy_key_to_clipboard
-            `open "#{access_request_template_url}"`
+            `#{'xdg-' unless macos?}open "#{access_request_template_url}" 2> /dev/null`
           else
             log "You'll need to submit ~/.ssh/id_rsa_vagov.pub for approval to: #{access_request_template_url}."
             exit 1 unless prompt.yes? 'Continue setup?'
@@ -75,7 +75,16 @@ module Vtk
         end
 
         def copy_key_to_clipboard
-          IO.popen('pbcopy', 'w') { |f| f << File.read("#{ssh_key_path}.pub") }
+          ssh_key_contents = File.read "#{ssh_key_path}.pub"
+
+          if macos?
+            copy_command = 'pbcopy'
+          elsif ubuntu_like?
+            system 'sudo apt-get install -y xsel' if `which xsel`.empty?
+            copy_command = 'xsel --clipboard'
+          end
+
+          IO.popen(copy_command, 'w') { |f| f << ssh_key_contents }
         end
 
         def access_request_template_url
@@ -90,6 +99,7 @@ module Vtk
         end
 
         def setup_ssh_config
+          create_ssh_directory
           install_ssh_config
           configure_ssh_config_with_keychain
           ssh_config_clean_up
@@ -105,7 +115,6 @@ module Vtk
           log 'Installing SSH config...'
 
           download_ssh_config unless File.exist? '/tmp/dova-devops'
-          create_ssh_directory
           backup_existing_ssh_config
           FileUtils.cp '/tmp/dova-devops/ssh/config', ssh_config_path
           FileUtils.chmod 0o600, "#{File.dirname ssh_config_path}/config"
@@ -125,7 +134,7 @@ module Vtk
         end
 
         def download_ssh_config
-          install_brew
+          install_git
 
           ssh_config_clean_up
 
@@ -138,10 +147,20 @@ module Vtk
           `cd /tmp/dova-devops; git checkout master -- ssh/config`
         end
 
+        def install_git
+          if macos?
+            install_brew
+          elsif ubuntu_like?
+            return true unless `which git`.empty?
+
+            system 'sudo apt-get install -y git'
+          end
+        end
+
         def install_brew
           return false unless macos?
 
-          installed = !`command -v brew`.empty?
+          installed = !`which brew`.empty?
           return true if installed
 
           log 'Homebrew not installed. Installing now...'
@@ -221,7 +240,7 @@ module Vtk
 
           if macos?
             `ssh-add -K 2> /dev/null; ssh-add -K #{ssh_key_path} 2> /dev/null`
-          elsif ubuntu?
+          elsif ubuntu_like?
             `[ -z "$SSH_AUTH_SOCK" ] && eval "$(ssh-agent -s)";
               ssh-add 2> /dev/null; ssh-add #{ssh_key_path} 2> /dev/null`
           end
@@ -265,10 +284,8 @@ module Vtk
         end
 
         def configure_system_boot
-          return false unless macos?
-
           log 'Configuring SOCKS tunnel to run on system boot...' do
-            install_autossh && install_launch_agent
+            install_autossh && (install_launch_agent || install_systemd_service)
           end
         end
 
@@ -281,13 +298,19 @@ module Vtk
         end
 
         def install_autossh
-          installed = !`command -v autossh`.empty?
+          installed = !`which autossh`.empty?
           return true if installed
 
-          system 'brew install autossh'
+          if macos?
+            system 'brew install autossh'
+          elsif ubuntu_like?
+            system 'sudo apt-get install -y autossh'
+          end
         end
 
         def install_launch_agent
+          return false unless macos?
+
           unless File.exist? "#{boot_script_path}/LaunchAgents/gov.va.socks.plist"
             FileUtils.mkdir_p "#{boot_script_path}/Logs/autossh"
             FileUtils.mkdir_p "#{boot_script_path}/LaunchAgents"
@@ -318,10 +341,47 @@ module Vtk
           )
         end
 
+        def install_systemd_service
+          return false unless ubuntu_like?
+
+          write_systemd_service unless File.exist? '/etc/systemd/system/va_gov_socks.service'
+
+          system 'sudo systemctl daemon-reload'
+          system 'sudo systemctl enable va_gov_socks'
+          system 'sudo systemctl start va_gov_socks'
+        end
+
+        def write_systemd_service
+          erb_template = File.read File.realpath "#{__dir__}/../../templates/socks/setup/va_gov_socks.service.erb"
+          erb = ERB.new erb_template
+          systemd_service_contents = erb.result(
+            systemd_service_variables.instance_eval { binding }
+          )
+          File.write '/tmp/va_gov_socks.service', systemd_service_contents
+          system 'sudo mv /tmp/va_gov_socks.service /etc/systemd/system/va_gov_socks.service'
+        end
+
+        def systemd_service_variables
+          OpenStruct.new(
+            autossh_path: `which autossh`.chomp,
+            port: @port,
+            ssh_key_path: ssh_key_path,
+            user: ENV['USER']
+          )
+        end
+
         def configure_system_proxy
-          return false unless macos?
           return log 'Skipping system proxy configuration as custom --port was used.' unless port == '2001'
-          return true if system_proxy_already_configured?
+
+          if macos?
+            mac_configure_system_proxy
+          elsif ubuntu_like?
+            ubuntu_configure_system_proxy
+          end
+        end
+
+        def mac_configure_system_proxy
+          return true if mac_system_proxy_already_configured?
 
           log 'Configuring system proxy to use SOCKS tunnel...' do
             network_interfaces.map do |network_interface|
@@ -330,7 +390,16 @@ module Vtk
           end
         end
 
-        def system_proxy_already_configured?
+        def ubuntu_configure_system_proxy
+          return true if `gsettings get org.gnome.system.proxy mode` == "'auto'\n"
+
+          log 'Configuring system proxy to use SOCKS tunnel...' do
+            `gsettings set org.gnome.system.proxy mode 'auto'` &&
+              `gsettings set org.gnome.system.proxy autoconfig-url "#{PROXY_URL}"`
+          end
+        end
+
+        def mac_system_proxy_already_configured?
           network_interfaces.map do |network_interface|
             output = `networksetup -getautoproxyurl "#{network_interface}"`
             output == "URL: #{PROXY_URL}\nEnabled: Yes\n"
@@ -364,12 +433,10 @@ module Vtk
           RUBY_PLATFORM.include? 'darwin'
         end
 
-        def ubuntu?
-          return false unless File.exist? '/etc/lsb-release'
+        def ubuntu_like?
+          return false if `which apt-get`.empty? && `which gsettings`.empty?
 
-          File.readlines('/etc/lsb-release').each { |line| return true if line =~ /^DISTRIB_ID=Ubuntu/ }
-
-          false
+          true
         end
 
         def pretty_ssh_config_path
