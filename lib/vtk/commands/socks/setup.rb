@@ -70,7 +70,6 @@ module Vtk
             `#{'xdg-' unless macos?}open "#{access_request_template_url}" 2> /dev/null`
           else
             log "You'll need to submit ~/.ssh/id_rsa_vagov.pub for approval to: #{access_request_template_url}."
-            exit 1 unless prompt.yes? 'Continue setup?'
           end
         end
 
@@ -312,7 +311,7 @@ module Vtk
           return false unless macos?
 
           unless File.exist? "#{boot_script_path}/LaunchAgents/gov.va.socks.plist"
-            FileUtils.mkdir_p "#{boot_script_path}/Logs/autossh"
+            FileUtils.mkdir_p "#{boot_script_path}/Logs/gov.va.socks"
             FileUtils.mkdir_p "#{boot_script_path}/LaunchAgents"
 
             write_launch_agent
