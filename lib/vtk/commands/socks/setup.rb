@@ -238,7 +238,7 @@ module Vtk
           FileUtils.chmod 0o600, "#{ssh_key_path}.pub" if public_key_exists?
 
           if macos?
-            `ssh-add -K 2> /dev/null; ssh-add -K #{ssh_key_path} 2> /dev/null`
+            `ssh-add -AK 2> /dev/null; ssh-add -AK #{ssh_key_path} 2> /dev/null`
           elsif ubuntu_like?
             `[ -z "$SSH_AUTH_SOCK" ] && eval "$(ssh-agent -s)";
               ssh-add 2> /dev/null; ssh-add #{ssh_key_path} 2> /dev/null`
