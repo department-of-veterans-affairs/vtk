@@ -8,6 +8,7 @@ RSpec.describe '`vtk socks` command', type: :cli do
         vtk socks help [COMMAND]  # Describe subcommands or one specific subcommand
         vtk socks off             # Disconnects from VA SOCKS
         vtk socks on              # Connects to VA SOCKS
+        vtk socks setup           # Configures local machine for VA SOCKS access
 
     OUT
 

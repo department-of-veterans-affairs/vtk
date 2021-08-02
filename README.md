@@ -35,6 +35,25 @@ This above command runs a custom rails generator. For more information see the [
 
 Handles connecting to VA network via SOCKS.
 
+---
+
+```
+$ vtk socks setup
+```
+
+The **setup subcommand** will do the following:
+- Download the recommended `.ssh/config` if missing.
+- Generate a VA SSH key if missing (and opens the access request form).
+- Add your VA SSH key to your ssh agent and keychain.
+- Test the SOCKS tunnel via SSH and HTTP
+- Configure your system to start the SOCKS tunnel on boot
+- Configure your system proxy for use on VA.gov domains (all other traffic bypasses the proxy).
+- Allow you to troubleshoot your SOCKS connection by running it again.
+
+**NOTE**: Running `vtk socks on` and/or `vtk socks off` is not necessary when using `vtk socks setup`.
+
+---
+
 ```
 $ vtk socks on
 ----> Connecting...
