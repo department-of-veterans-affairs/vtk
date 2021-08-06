@@ -40,8 +40,6 @@ module Vtk
           configure_system_boot
           configure_system_proxy
 
-          test_http_connection unless skip_test
-
           log 'SOCKS setup complete.'
         end
 
@@ -67,23 +65,41 @@ module Vtk
 
           if prompt.yes?(copy_and_open_gh)
             copy_key_to_clipboard
-            `#{'xdg-' unless macos?}open "#{access_request_template_url}" 2> /dev/null`
+            open_command access_request_template_url
           else
-            log "You'll need to submit ~/.ssh/id_rsa_vagov.pub for approval to: #{access_request_template_url}."
+            key_contents = File.read "#{ssh_key_path}.pub"
+            log "Here is the public key to copy/paste into the access request form:\n\n#{key_contents}\n"
+            log "You'll need to submit this key for approval to: #{access_request_template_url}."
           end
         end
 
         def copy_key_to_clipboard
           ssh_key_contents = File.read "#{ssh_key_path}.pub"
 
-          if macos?
-            copy_command = 'pbcopy'
-          elsif ubuntu_like?
-            system 'sudo apt-get install -y xsel' if `which xsel`.empty?
-            copy_command = 'xsel --clipboard'
+          if copy_command
+            IO.popen(copy_command, 'w') { |f| f << ssh_key_contents }
+          elsif wsl?
+            system %(powershell.exe Set-Clipboard -Value "'#{ssh_key_contents}'")
           end
+        end
 
-          IO.popen(copy_command, 'w') { |f| f << ssh_key_contents }
+        def copy_command
+          if macos?
+            'pbcopy'
+          elsif ubuntu_like? && !wsl?
+            system 'sudo apt-get install -y xsel' if `which xsel`.empty?
+            'xsel --clipboard'
+          end
+        end
+
+        def open_command(url)
+          if macos?
+            `open "#{url}"`
+          elsif wsl?
+            `powershell.exe Start '"#{url}"'`
+          elsif ubuntu_like?
+            `xdg-open "#{url}"`
+          end
         end
 
         def access_request_template_url
@@ -138,6 +154,8 @@ module Vtk
           ssh_config_clean_up
 
           ssh_agent_add
+          system 'git config --global credential.helper > /dev/null || ' \
+            "git config --global credential.helper 'cache --timeout=600'"
           cloned = system(
             "git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} '/tmp/dova-devops'"
           )
@@ -250,14 +268,16 @@ module Vtk
 
           add_ip_to_known_hosts
 
-          ssh_output = `ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -q socks -D #{port} exit 2>&1`
-
-          if ssh_output.include? 'This account is currently not available.'
-            output.puts ' ✅'
+          if proxy_running? || ssh_output.include?('This account is currently not available.')
+            output.puts ' ✅ DONE'
           else
             check_ssh_error ssh_output
             exit 1
           end
+        end
+
+        def ssh_output
+          `ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -q socks -D #{port} exit 2>&1`
         end
 
         def add_ip_to_known_hosts
@@ -284,8 +304,37 @@ module Vtk
 
         def configure_system_boot
           log 'Configuring SOCKS tunnel to run on system boot...' do
-            install_autossh && (install_launch_agent || install_systemd_service)
+            if wsl?
+              wsl_configure_system_boot && wsl_start_socks_proxy
+            else
+              install_autossh && (install_launch_agent || install_systemd_service)
+            end
           end
+        end
+
+        def wsl_configure_system_boot
+          return true if File.exist? socks_bat
+
+          IO.write socks_bat, 'wsl nohup bash -c "/usr/bin/ssh socks -N &" < nul > nul 2>&1', mode: 'a'
+        end
+
+        def socks_bat
+          "#{socks_bat_dir}/gov.va.socks.bat"
+        end
+
+        def socks_bat_dir
+          profile_path = `wslpath "$(wslvar USERPROFILE)"`.chomp
+          "#{profile_path}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup"
+        end
+
+        def wsl_start_socks_proxy
+          return true if proxy_running?
+
+          system "cd '#{socks_bat_dir}'; cmd.exe /c gov.va.socks.bat > /dev/null"
+        end
+
+        def proxy_running?
+          system("lsof -i:#{port}", out: '/dev/null') || system('lsof -nP | grep ssh | grep -q sock')
         end
 
         def launch_agent_label
@@ -374,6 +423,8 @@ module Vtk
 
           if macos?
             mac_configure_system_proxy
+          elsif wsl?
+            wsl_configure_system_proxy
           elsif ubuntu_like?
             ubuntu_configure_system_proxy
           end
@@ -398,6 +449,13 @@ module Vtk
           end
         end
 
+        def wsl_configure_system_proxy
+          log 'Configuring system proxy to use SOCKS tunnel...' do
+            reg_key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
+            `powershell.exe Set-ItemProperty -path "'#{reg_key}'" AutoConfigURL -Value "'#{PROXY_URL}'"`
+          end
+        end
+
         def mac_system_proxy_already_configured?
           network_interfaces.map do |network_interface|
             output = `networksetup -getautoproxyurl "#{network_interface}"`
@@ -413,23 +471,12 @@ module Vtk
           end
         end
 
-        def test_http_connection
-          output.print '----> Testing SOCKS HTTP connection...'
-
-          success = 5.times.map do
-            sleep 1
-            not_connected = system "nscurl http://grafana.vfs.va.gov 2>&1 | grep -q 'hostname could not be found'"
-
-            break [true] unless not_connected
-          end.all?
-
-          output.puts success ? ' ✅' : ' ❌ ERROR: SOCKS connection failed HTTP test. Try running setup again.'
-
-          exit 1 unless success
-        end
-
         def macos?
           RUBY_PLATFORM.include? 'darwin'
+        end
+
+        def wsl?
+          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/)
         end
 
         def ubuntu_like?
@@ -456,7 +503,7 @@ module Vtk
 
             return_value = yield
 
-            output.puts return_value ? ' ✅' : ' ❌'
+            output.puts return_value ? ' ✅ DONE' : ' ❌ FAIL'
 
             return_value
           else

@@ -69,7 +69,7 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
 
       cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key'
       output = run_and_answer cmd, []
-      index = output.length - 8
+      index = output.length - 7
 
       expect(output[0]).to eq('----> Installing SSH config...')
       expect(output[1]).to eq('----> VA key missing. Generating now...')
@@ -91,11 +91,10 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       expect(output[index]).to eq('+----[SHA256]-----+')
       expect(output[index + 1]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
       expect(output[index + 2]).to start_with('----> An SSH key has been created. Would you like to copy the key to')
-      expect(output[index + 3]).to eq('----> Testing SOCKS SSH connection... ✅')
-      expect(output[index + 4]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
-      expect(output[index + 5]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
-      expect(output[index + 6]).to eq('----> Testing SOCKS HTTP connection... ✅')
-      expect(output[index + 7]).to eq('----> SOCKS setup complete.')
+      expect(output[index + 3]).to eq('----> Testing SOCKS SSH connection... ✅ DONE')
+      expect(output[index + 4]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅ DONE')
+      expect(output[index + 5]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅ DONE')
+      expect(output[index + 6]).to eq('----> SOCKS setup complete.')
     end
 
     it 'sets everything up with a working key' do
@@ -109,11 +108,10 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
       `launchctl unload -w tmp/ssh/LaunchAgents/gov.va.socks.plist`
 
       expect(output[0]).to eq('----> Installing SSH config...')
-      expect(output[1]).to eq('----> Testing SOCKS SSH connection... ✅')
-      expect(output[2]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅')
-      expect(output[3]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅')
-      expect(output[4]).to eq('----> Testing SOCKS HTTP connection... ✅')
-      expect(output[5]).to eq('----> SOCKS setup complete.')
+      expect(output[1]).to eq('----> Testing SOCKS SSH connection... ✅ DONE')
+      expect(output[2]).to eq('----> Configuring SOCKS tunnel to run on system boot... ✅ DONE')
+      expect(output[3]).to eq('----> Configuring system proxy to use SOCKS tunnel... ✅ DONE')
+      expect(output[4]).to eq('----> SOCKS setup complete.')
     end
   end
 end
