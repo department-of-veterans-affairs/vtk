@@ -28,31 +28,47 @@ module Vtk
         end
 
         def execute(input: $stdin, output: $stdout)
-          @input = input
-          @output = output
+          define_stdin_out_vars input: input, output: output
 
           setup_ssh_config
           check_ssh_key
           ssh_agent_add
 
-          test_ssh_connection unless skip_test
+          unless @ssh_key_created
+            test_ssh_connection unless skip_test
+            configure_system_boot
+            configure_system_proxy
+          end
 
-          configure_system_boot
-          configure_system_proxy
-
-          log 'SOCKS setup complete.'
+          log "SOCKS setup complete. #{'Re-run `vtk socks setup` after your key is approved.' if @ssh_key_created}"
         end
 
         private
 
-        def check_ssh_key
-          return true if key_exists?
+        def define_stdin_out_vars(input:, output:)
+          @input = input
+          @output = output
+        end
 
-          generate_key_and_open_key_access_request
+        def check_ssh_key
+          return true if key_exists? && private_and_public_keys_match?
+
+          @ssh_key_created = generate_key_and_open_key_access_request
         end
 
         def key_exists?
           File.exist? ssh_key_path
+        end
+
+        def private_and_public_keys_match?
+          return true unless public_key_exists?
+
+          pub_key_from_private = `ssh-keygen -y -e -f #{ssh_key_path}`
+          pub_key_from_public = `ssh-keygen -y -e -f #{ssh_key_path}.pub`
+          return true if pub_key_from_private == pub_key_from_public
+
+          log "❌ ERROR: #{ssh_key_path}.pub is not the public key for #{ssh_key_path}."
+          exit 1
         end
 
         def public_key_exists?
@@ -68,8 +84,7 @@ module Vtk
             open_command access_request_template_url
           else
             key_contents = File.read "#{ssh_key_path}.pub"
-            log "Here is the public key to copy/paste into the access request form:\n\n#{key_contents}\n"
-            log "You'll need to submit this key for approval to: #{access_request_template_url}."
+            log "Copy this key & submit into the access request form (#{access_request_template_url}):\n#{key_contents}"
           end
         end
 
@@ -292,8 +307,8 @@ module Vtk
 
         def check_ssh_error(ssh_output)
           if ssh_output.include? 'Permission denied (publickey)'
-            @skip_test = true
             output.puts '⚠️  WARN: SSH key is not approved yet. Once it is, re-run `vtk socks setup`.'
+            copy_key_to_clipboard if prompt.yes? 'Would you like to copy your VA public key to your clipboard again?'
           else
             ssh_command = "ssh -i #{ssh_key_path} -F #{ssh_config_path} -o ConnectTimeout=5 -vvv socks -D #{port} -N"
             output.puts ' ❌ ERROR: SSH Connection to SOCKS server unsuccessful. Error message:'
@@ -476,7 +491,7 @@ module Vtk
         end
 
         def wsl?
-          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/)
+          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/).size.positive?
         end
 
         def ubuntu_like?
