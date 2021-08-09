@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.9.1](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.1) (2021-08-06)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.0...v0.9.1)
+
+**Merged pull requests:**
+
+- VTK Socks Setup for Windows \(via WSL\) [\#19](https://github.com/department-of-veterans-affairs/vtk/pull/19) ([ericboehs](https://github.com/ericboehs))
+- Add ops-access-request label to new issue [\#18](https://github.com/department-of-veterans-affairs/vtk/pull/18) ([jeff2d2](https://github.com/jeff2d2))
+
 ## [v0.9.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.0) (2021-08-02)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.8.0...v0.9.0)
@@ -8,6 +17,7 @@
 
 - SOCKS Setup Command [\#11](https://github.com/department-of-veterans-affairs/vtk/pull/11) ([ericboehs](https://github.com/ericboehs))
 - Command Analytics [\#8](https://github.com/department-of-veterans-affairs/vtk/pull/8) ([ericboehs](https://github.com/ericboehs))
+- Open Jenkins [\#1](https://github.com/department-of-veterans-affairs/vtk/pull/1) ([cvalarida](https://github.com/cvalarida))
 
 ## [v0.8.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.8.0) (2021-03-01)
 
@@ -38,6 +48,10 @@
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.6...v0.3.0)
 
+**Merged pull requests:**
+
+- SOCKS On/Off Commands [\#9](https://github.com/department-of-veterans-affairs/vtk/pull/9) ([ericboehs](https://github.com/ericboehs))
+
 ## [v0.2.6](https://github.com/department-of-veterans-affairs/vtk/tree/v0.2.6) (2021-02-03)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.2.5...v0.2.6)
@@ -58,7 +72,6 @@
 **Merged pull requests:**
 
 - added Docker instructions to the README [\#10](https://github.com/department-of-veterans-affairs/vtk/pull/10) ([thilton-oddball](https://github.com/thilton-oddball))
-- SOCKS On/Off Commands [\#9](https://github.com/department-of-veterans-affairs/vtk/pull/9) ([ericboehs](https://github.com/ericboehs))
 - use system command [\#7](https://github.com/department-of-veterans-affairs/vtk/pull/7) ([LindseySaari](https://github.com/LindseySaari))
 - Add additional module subcommands [\#6](https://github.com/department-of-veterans-affairs/vtk/pull/6) ([LindseySaari](https://github.com/LindseySaari))
 - Check for Rails dependency [\#5](https://github.com/department-of-veterans-affairs/vtk/pull/5) ([LindseySaari](https://github.com/LindseySaari))
@@ -90,10 +103,6 @@
 ## [oclif](https://github.com/department-of-veterans-affairs/vtk/tree/oclif) (2020-08-10)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/79143038509757799edb2bb9be2f925b7d985221...oclif)
-
-**Merged pull requests:**
-
-- Open Jenkins [\#1](https://github.com/department-of-veterans-affairs/vtk/pull/1) ([cvalarida](https://github.com/cvalarida))
 
 
 
