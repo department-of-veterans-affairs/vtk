@@ -263,7 +263,7 @@ module Vtk
           return false unless ssh_config_exists?
 
           ssh_config_local = File.readlines ssh_config_path
-          ssh_config_local.grep(/UseKeychain yes/).size.positive?
+          ssh_config_local.grep(/UseKeychain yes/).any?
         end
 
         def ssh_agent_add
@@ -491,7 +491,7 @@ module Vtk
         end
 
         def wsl?
-          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/).size.positive?
+          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/i).any?
         end
 
         def ubuntu_like?
