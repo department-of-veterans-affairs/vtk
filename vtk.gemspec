@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['eric.boehs@oddball.io', 'lindsey.hattamer@oddball.io', 'travis.hilton@oddball.io']
 
   spec.summary       = 'A CLI for the platform'
-  spec.description   = 'This is a platform CLI tool for VFS developer usage.'
+  spec.description   = 'The purpose of this gem is to allow engineers to quickly begin developing on VA.gov.'
   spec.homepage      = 'https://github.com/department-of-veterans-affairs/vtk'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
