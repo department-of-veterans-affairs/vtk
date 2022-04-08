@@ -120,7 +120,7 @@ module Vtk
         def access_request_template_url
           'https://github.com/department-of-veterans-affairs/va.gov-team/issues/new?' \
             'assignees=&labels=external-request%2C+operations%2C+ops-access-request&' \
-            'template=socks-access-request.yml&title=Access+for+%5Bindividual%5D'
+            'template=socks-access-request.yml&title=SOCKS+access+for+%5Bindividual%5D'
         end
 
         def copy_and_open_gh
