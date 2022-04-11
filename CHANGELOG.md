@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.9.4](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.4) (2022-04-11)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.3...v0.9.4)
+
+**Merged pull requests:**
+
+- Bump version to 0.9.4 [\#30](https://github.com/department-of-veterans-affairs/vtk/pull/30) ([rmtolmach](https://github.com/rmtolmach))
+- Update SOCKS request url [\#29](https://github.com/department-of-veterans-affairs/vtk/pull/29) ([rmtolmach](https://github.com/rmtolmach))
+
+## [v0.9.3](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.3) (2021-09-23)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.2...v0.9.3)
+
 ## [v0.9.2](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.2) (2021-08-11)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.1...v0.9.2)
@@ -7,6 +20,7 @@
 **Merged pull requests:**
 
 - Case insensitively check for Microsoft in /proc/version [\#21](https://github.com/department-of-veterans-affairs/vtk/pull/21) ([ericboehs](https://github.com/ericboehs))
+- VTK Socks Setup for Windows \(via WSL\) [\#19](https://github.com/department-of-veterans-affairs/vtk/pull/19) ([ericboehs](https://github.com/ericboehs))
 
 ## [v0.9.1](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.1) (2021-08-06)
 
@@ -14,7 +28,6 @@
 
 **Merged pull requests:**
 
-- VTK Socks Setup for Windows \(via WSL\) [\#19](https://github.com/department-of-veterans-affairs/vtk/pull/19) ([ericboehs](https://github.com/ericboehs))
 - Add ops-access-request label to new issue [\#18](https://github.com/department-of-veterans-affairs/vtk/pull/18) ([jeff2d2](https://github.com/jeff2d2))
 
 ## [v0.9.0](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.0) (2021-08-02)
