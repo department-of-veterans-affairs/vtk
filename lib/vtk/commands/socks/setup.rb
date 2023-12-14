@@ -450,7 +450,7 @@ module Vtk
 
           log 'Configuring system proxy to use SOCKS tunnel...' do
             network_interfaces.map do |network_interface|
-              system %(networksetup -setautoproxyurl "#{network_interface}" "#{PROXY_URL}")
+              system %(sudo networksetup -setautoproxyurl "#{network_interface}" "#{PROXY_URL}")
             end.all?
           end
         end
