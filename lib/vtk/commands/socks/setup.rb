@@ -19,9 +19,9 @@ module Vtk
           @options = options
           @prompt = TTY::Prompt.new interrupt: :exit
           @port = options['port'] || '2001'
-          @boot_script_path = options['boot_script_path'] || "#{ENV.fetch('HOME', nil)}/Library"
-          @ssh_key_path = options['ssh_key_path'] || "#{ENV.fetch('HOME', nil)}/.ssh/id_rsa_vagov"
-          @ssh_config_path = options['ssh_config_path'] || "#{ENV.fetch('HOME', nil)}/.ssh/config"
+          @boot_script_path = options['boot_script_path'] || "#{Dir.home}/Library"
+          @ssh_key_path = options['ssh_key_path'] || "#{Dir.home}/.ssh/id_rsa_vagov"
+          @ssh_config_path = options['ssh_config_path'] || "#{Dir.home}/.ssh/config"
           @skip_test = options['skip_test'] || false
 
           super()
@@ -509,7 +509,7 @@ module Vtk
         end
 
         def pretty_path(path)
-          path.gsub ENV.fetch('HOME', nil), '~'
+          path.gsub Dir.home, '~'
         end
 
         def log(message)
