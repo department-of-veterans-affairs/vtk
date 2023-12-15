@@ -479,11 +479,10 @@ module Vtk
         end
 
         def network_interfaces
-          @network_interfaces ||= begin
-            `networksetup -listallnetworkservices`.split("\n").drop(1).select do |network_interface|
+          @network_interfaces ||= `networksetup -listallnetworkservices`.split("\n").drop(1).select do |network_interface|
               `networksetup -getautoproxyurl "#{network_interface}"`.start_with?('URL: (null)')
             end
-          end
+          
         end
 
         def macos?
