@@ -11,7 +11,7 @@ module Vtk
       # Sets up socks access to the VA network
       class Setup < Vtk::Command
         PROXY_URL = 'https://raw.githubusercontent.com/department-of-veterans-affairs/va.gov-team/master/' \
-          'scripts/socks/proxy.pac'
+                    'scripts/socks/proxy.pac'
 
         attr_reader :ssh_config_path, :input, :output, :boot_script_path, :ssh_key_path, :prompt, :port, :skip_test
 
@@ -170,7 +170,7 @@ module Vtk
 
           ssh_agent_add
           system 'git config --global credential.helper > /dev/null || ' \
-            "git config --global credential.helper 'cache --timeout=600'"
+                 "git config --global credential.helper 'cache --timeout=600'"
           cloned = system(
             "git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} '/tmp/dova-devops'"
           )
@@ -230,7 +230,7 @@ module Vtk
 
           if File.exist? "#{ssh_config_path}.bak"
             log "!!! ERROR: Could not make backup of #{pretty_ssh_config_path} as #{pretty_ssh_config_path}.bak " \
-              'exists. Aborting.'
+                'exists. Aborting.'
             exit 1
           end
 
