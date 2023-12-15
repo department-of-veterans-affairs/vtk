@@ -11,7 +11,7 @@ module Vtk
       # Sets up socks access to the VA network
       class Setup < Vtk::Command
         PROXY_URL = 'https://raw.githubusercontent.com/department-of-veterans-affairs/va.gov-team/master/' \
-          'scripts/socks/proxy.pac'
+                    'scripts/socks/proxy.pac'
 
         attr_reader :ssh_config_path, :input, :output, :boot_script_path, :ssh_key_path, :prompt, :port, :skip_test
 
@@ -19,9 +19,9 @@ module Vtk
           @options = options
           @prompt = TTY::Prompt.new interrupt: :exit
           @port = options['port'] || '2001'
-          @boot_script_path = options['boot_script_path'] || "#{ENV['HOME']}/Library"
-          @ssh_key_path = options['ssh_key_path'] || "#{ENV['HOME']}/.ssh/id_rsa_vagov"
-          @ssh_config_path = options['ssh_config_path'] || "#{ENV['HOME']}/.ssh/config"
+          @boot_script_path = options['boot_script_path'] || "#{Dir.home}/Library"
+          @ssh_key_path = options['ssh_key_path'] || "#{Dir.home}/.ssh/id_rsa_vagov"
+          @ssh_config_path = options['ssh_config_path'] || "#{Dir.home}/.ssh/config"
           @skip_test = options['skip_test'] || false
 
           super()
@@ -170,7 +170,7 @@ module Vtk
 
           ssh_agent_add
           system 'git config --global credential.helper > /dev/null || ' \
-            "git config --global credential.helper 'cache --timeout=600'"
+                 "git config --global credential.helper 'cache --timeout=600'"
           cloned = system(
             "git clone --quiet#{' --depth 1' if macos?} --no-checkout --filter=blob:none #{repo_url} '/tmp/dova-devops'"
           )
@@ -230,7 +230,7 @@ module Vtk
 
           if File.exist? "#{ssh_config_path}.bak"
             log "!!! ERROR: Could not make backup of #{pretty_ssh_config_path} as #{pretty_ssh_config_path}.bak " \
-              'exists. Aborting.'
+                'exists. Aborting.'
             exit 1
           end
 
@@ -256,7 +256,7 @@ module Vtk
               IdentityFile #{pretty_ssh_key_path}
           CFG
 
-          IO.write ssh_config_path, keychain_config, mode: 'a'
+          File.write ssh_config_path, keychain_config, mode: 'a'
         end
 
         def ssh_config_configured_with_keychain?
@@ -330,7 +330,7 @@ module Vtk
         def wsl_configure_system_boot
           return true if File.exist? socks_bat
 
-          IO.write socks_bat, 'wsl nohup bash -c "/usr/bin/ssh socks -N &" < nul > nul 2>&1', mode: 'a'
+          File.write socks_bat, 'wsl nohup bash -c "/usr/bin/ssh socks -N &" < nul > nul 2>&1', mode: 'a'
         end
 
         def socks_bat
@@ -400,7 +400,7 @@ module Vtk
             autossh_path: `which autossh`.chomp,
             port: @port,
             boot_script_path: File.realpath(boot_script_path),
-            user: ENV['USER']
+            user: ENV.fetch('USER', nil)
           )
         end
 
@@ -429,7 +429,7 @@ module Vtk
             autossh_path: `which autossh`.chomp,
             port: @port,
             ssh_key_path: ssh_key_path,
-            user: ENV['USER']
+            user: ENV.fetch('USER', nil)
           )
         end
 
@@ -479,10 +479,8 @@ module Vtk
         end
 
         def network_interfaces
-          @network_interfaces ||= begin
-            `networksetup -listallnetworkservices`.split("\n").drop(1).select do |network_interface|
-              `networksetup -getautoproxyurl "#{network_interface}"`.start_with?('URL: (null)')
-            end
+          @network_interfaces ||= `networksetup -listallnetworkservices`.split("\n").drop(1).select do |interface|
+            `networksetup -getautoproxyurl "#{interface}"`.start_with?('URL: (null)')
           end
         end
 
@@ -509,7 +507,7 @@ module Vtk
         end
 
         def pretty_path(path)
-          path.gsub ENV['HOME'], '~'
+          path.gsub Dir.home, '~'
         end
 
         def log(message)

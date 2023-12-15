@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata['documentation_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
   spec.metadata['changelog_uri'] = 'https://github.com/department-of-veterans-affairs/vtk/blob/master/CHANGELOG.md'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -31,15 +32,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor', '> 0.20.3'
   spec.add_dependency 'tty-command', '~> 0.10.0'
   spec.add_dependency 'tty-prompt', '~> 0.23.0'
-
-  spec.add_development_dependency 'github_changelog_generator', '~> 1.15.0'
-  spec.add_development_dependency 'pry', '~> 0.13.0'
-  spec.add_development_dependency 'rake', '~> 13.0.0'
-  spec.add_development_dependency 'rspec', '~> 3.10.0'
-  spec.add_development_dependency 'rubocop', '~> 1.8.0'
-  spec.add_development_dependency 'rubocop-rake', '~> 0.5.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 2.0.0'
-
-  # For more information and examples about making a new gem, checkout our
-  # guide at: https://bundler.io/guides/creating_gem.html
 end
