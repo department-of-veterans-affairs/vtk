@@ -256,7 +256,7 @@ module Vtk
               IdentityFile #{pretty_ssh_key_path}
           CFG
 
-          IO.write ssh_config_path, keychain_config, mode: 'a'
+          File.write ssh_config_path, keychain_config, mode: 'a'
         end
 
         def ssh_config_configured_with_keychain?
@@ -330,7 +330,7 @@ module Vtk
         def wsl_configure_system_boot
           return true if File.exist? socks_bat
 
-          IO.write socks_bat, 'wsl nohup bash -c "/usr/bin/ssh socks -N &" < nul > nul 2>&1', mode: 'a'
+          File.write socks_bat, 'wsl nohup bash -c "/usr/bin/ssh socks -N &" < nul > nul 2>&1', mode: 'a'
         end
 
         def socks_bat
