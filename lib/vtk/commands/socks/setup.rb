@@ -19,9 +19,9 @@ module Vtk
           @options = options
           @prompt = TTY::Prompt.new interrupt: :exit
           @port = options['port'] || '2001'
-          @boot_script_path = options['boot_script_path'] || "#{ENV['HOME']}/Library"
-          @ssh_key_path = options['ssh_key_path'] || "#{ENV['HOME']}/.ssh/id_rsa_vagov"
-          @ssh_config_path = options['ssh_config_path'] || "#{ENV['HOME']}/.ssh/config"
+          @boot_script_path = options['boot_script_path'] || "#{ENV.fetch('HOME', nil)}/Library"
+          @ssh_key_path = options['ssh_key_path'] || "#{ENV.fetch('HOME', nil)}/.ssh/id_rsa_vagov"
+          @ssh_config_path = options['ssh_config_path'] || "#{ENV.fetch('HOME', nil)}/.ssh/config"
           @skip_test = options['skip_test'] || false
 
           super()
@@ -400,7 +400,7 @@ module Vtk
             autossh_path: `which autossh`.chomp,
             port: @port,
             boot_script_path: File.realpath(boot_script_path),
-            user: ENV['USER']
+            user: ENV.fetch('USER', nil)
           )
         end
 
@@ -429,7 +429,7 @@ module Vtk
             autossh_path: `which autossh`.chomp,
             port: @port,
             ssh_key_path: ssh_key_path,
-            user: ENV['USER']
+            user: ENV.fetch('USER', nil)
           )
         end
 
@@ -509,7 +509,7 @@ module Vtk
         end
 
         def pretty_path(path)
-          path.gsub ENV['HOME'], '~'
+          path.gsub ENV.fetch('HOME', nil), '~'
         end
 
         def log(message)
