@@ -102,7 +102,7 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
 
       `cp ~/.ssh/id_rsa_vagov tmp/ssh/key`
       cmd = 'vtk socks setup --ssh-config-path tmp/ssh/config --ssh-key-path tmp/ssh/key ' \
-        '--boot-script-path tmp/ssh'
+            '--boot-script-path tmp/ssh'
       output = run_and_answer cmd, []
 
       `launchctl unload -w tmp/ssh/LaunchAgents/gov.va.socks.plist`

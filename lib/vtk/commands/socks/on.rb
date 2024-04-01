@@ -30,14 +30,14 @@ module Vtk
 
         def connected?
           system "curl --max-time 2 -sL --proxy socks5h://127.0.0.1:#{port} sentry.vfs.va.gov 2> /dev/null | " \
-            'grep -q sentry-logo'
+                 'grep -q sentry-logo'
         end
 
         def connect_to_socks
           exit if system "lsof -Pi :#{port} -sTCP:LISTEN -t > /dev/null"
 
           Process.spawn "nohup ssh -vvv -o ServerAliveInterval=60 -o ConnectTimeout=5 socks -D #{port} -N" \
-            '> /tmp/socks.log 2>&1 &'
+                        '> /tmp/socks.log 2>&1 &'
         end
 
         def ensure_connection
