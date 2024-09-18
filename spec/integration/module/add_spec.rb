@@ -8,7 +8,7 @@ RSpec.describe '`vtk module add` command', type: :cli do
         vtk module add <module name>
 
       Options:
-        -h, [--help], [--no-help]  # Display usage information
+        -h, [--help], [--no-help], [--skip-help]  # Display usage information
 
       Add a new module to vets-api
     OUT

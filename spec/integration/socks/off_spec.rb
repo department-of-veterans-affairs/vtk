@@ -21,8 +21,8 @@ RSpec.describe '`vtk socks off` command', type: :cli do
         vtk socks off
 
       Options:
-        -h, [--help], [--no-help]  # Display usage information
-        -p, [--port=PORT]          # Port that SOCKS server is running on
+        -h, [--help], [--no-help], [--skip-help]  # Display usage information
+        -p, [--port=PORT]                         # Port that SOCKS server is running on
 
       Disconnects from VA SOCKS
     OUT

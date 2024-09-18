@@ -8,8 +8,8 @@ RSpec.describe '`vtk module model` command', type: :cli do
         vtk module model <component name> -m, --module-name=MODULE_NAME
 
       Options:
-        -h, [--help], [--no-help]      # Display usage information
-        -m, --module-name=MODULE_NAME  # Specify the module name
+        -h, [--help], [--no-help], [--skip-help]  # Display usage information
+        -m, --module-name=MODULE_NAME             # Specify the module name
 
       Add new model to a module in vets-api
     OUT

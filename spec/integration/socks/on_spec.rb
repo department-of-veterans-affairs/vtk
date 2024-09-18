@@ -17,8 +17,8 @@ RSpec.describe '`vtk socks on` command', type: :cli do
         vtk socks on
 
       Options:
-        -h, [--help], [--no-help]  # Display usage information
-        -p, [--port=PORT]          # Port to run SOCKS server on
+        -h, [--help], [--no-help], [--skip-help]  # Display usage information
+        -p, [--port=PORT]                         # Port to run SOCKS server on
 
       Connects to VA SOCKS
     OUT
