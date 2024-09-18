@@ -1,5 +1,24 @@
 # Changelog
 
+## [v1.0.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.0.0) (2024-09-18)
+
+🎉
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.5...v1.0.0)
+
+**Merged pull requests:**
+
+- fix: OpenStruct is no longer auto required in Ruby 3.2 [\#62](https://github.com/department-of-veterans-affairs/vtk/pull/62) ([ericboehs](https://github.com/ericboehs))
+- Update RuboCop w/ corrections [\#53](https://github.com/department-of-veterans-affairs/vtk/pull/53) ([ericboehs](https://github.com/ericboehs))
+
+## [v0.9.5](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.5) (2023-12-15)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.4...v0.9.5)
+
+**Merged pull requests:**
+
+- Add sudo to proxy setup command for MacOS. [\#52](https://github.com/department-of-veterans-affairs/vtk/pull/52) ([omahane](https://github.com/omahane))
+
 ## [v0.9.4](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.4) (2022-04-11)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.3...v0.9.4)
