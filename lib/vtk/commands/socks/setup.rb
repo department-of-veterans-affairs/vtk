@@ -4,6 +4,7 @@ require_relative '../../command'
 require 'tty-prompt'
 require 'fileutils'
 require 'erb'
+require 'ostruct'
 
 module Vtk
   module Commands
