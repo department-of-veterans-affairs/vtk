@@ -10,12 +10,12 @@ RSpec.describe '`vtk socks setup` command', type: :cli do
         vtk socks setup
 
       Options:
-        -h, [--help], [--no-help]                  # Display usage information
+        -h, [--help], [--no-help], [--skip-help]   # Display usage information
             [--boot-script-path=BOOT_SCRIPT_PATH]  # Path to install boot script (e.g. ~/Library)
             [--ssh-key-path=SSH_KEY_PATH]          # Path to SSH key (e.g. ~/.ssh/id_rsa_vagov)
             [--ssh-config-path=SSH_CONFIG_PATH]    # Path to SSH config (e.g. ~/.ssh/config)
         -p, [--port=PORT]                          # Port that SOCKS server is running on
-            [--skip-test], [--no-skip-test]        # Skip testing SOCKS connection
+            [--skip-test]                          # Skip testing SOCKS connection
 
       Configures local machine for VA SOCKS access
     OUT
