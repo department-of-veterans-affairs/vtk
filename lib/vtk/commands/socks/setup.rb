@@ -459,10 +459,12 @@ module Vtk
         def ubuntu_configure_system_proxy
           return true if `gsettings get org.gnome.system.proxy mode` == "'auto'\n"
 
+          # rubocop:disable Lint/LiteralAsCondition
           log 'Configuring system proxy to use SOCKS tunnel...' do
             `gsettings set org.gnome.system.proxy mode 'auto'` &&
               `gsettings set org.gnome.system.proxy autoconfig-url "#{PROXY_URL}"`
           end
+          # rubocop:enable Lint/LiteralAsCondition
         end
 
         def wsl_configure_system_proxy
