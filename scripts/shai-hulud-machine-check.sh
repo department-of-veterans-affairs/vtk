@@ -395,7 +395,8 @@ elif [ ${#HIGH_FINDINGS[@]} -gt 0 ]; then
       log "  ${YELLOW}-${NC} $finding"
     done
     log ""
-    log "Run with ${BOLD}--verbose${NC} for details"
+    log "These may be legitimate if you installed them intentionally."
+    log "Run with ${BOLD}--verbose${NC} for details or investigate if unexpected."
   fi
 else
   if [ "$VERBOSE" = true ]; then
