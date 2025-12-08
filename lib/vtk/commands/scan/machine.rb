@@ -34,6 +34,7 @@ module Vtk
 
         def run_script(script_path)
           cmd = [script_path]
+          cmd << '--verbose' if options[:verbose]
           cmd << '--json' if options[:json]
           cmd << '--quiet' if options[:quiet]
 

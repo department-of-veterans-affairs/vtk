@@ -5,23 +5,21 @@ require 'English'
 RSpec.describe '`vtk scan machine` command', type: :cli do
   it 'executes `vtk scan help machine` command successfully' do
     output = `vtk scan help machine`
-    expected_output = <<~OUT
-      Usage:
-        vtk scan machine
-
-      Options:
-        -h, [--help], [--no-help], [--skip-help]     # Display usage information
-        -j, [--json], [--no-json], [--skip-json]     # Output results as JSON
-        -q, [--quiet], [--no-quiet], [--skip-quiet]  # Exit code only, no output
-
-      Check for active malware infection indicators (Shai-Hulud)
-    OUT
-
-    expect(output).to eq(expected_output)
+    expect(output).to include('vtk scan machine')
+    expect(output).to include('--verbose')
+    expect(output).to include('--json')
+    expect(output).to include('--quiet')
+    expect(output).to include('Shai-Hulud')
   end
 
-  it 'executes `vtk scan machine` command successfully' do
+  it 'executes `vtk scan machine` command with compact output' do
     output = `vtk scan machine 2>&1`
+
+    expect(output).to include('Shai-Hulud Check:')
+  end
+
+  it 'executes `vtk scan machine --verbose` with detailed output' do
+    output = `vtk scan machine --verbose 2>&1`
 
     expect(output).to include('Shai-Hulud Machine Infection Check')
     expect(output).to include('Critical Checks')

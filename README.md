@@ -67,6 +67,39 @@ $ vtk socks off
 ----> Disconnected from SOCKS.
 ```
     
+### Scan
+
+Security scanning commands for detecting malware and vulnerabilities.
+
+---
+
+```
+$ vtk scan machine
+```
+
+The **machine subcommand** checks your local machine for signs of active Shai-Hulud malware infection. This is a fast (~5 second) check that looks for:
+
+- **Critical indicators**: `~/.dev-env/` persistence folder, malicious processes (Runner.Listener, SHA1HULUD), malware payload files
+- **High-risk indicators**: Exfiltration artifacts, unexpected Bun/Trufflehog installations
+- **Credential inventory**: Lists credential files that should be rotated if infected
+
+**Exit codes:**
+- `0` - Clean (no infection indicators)
+- `1` - Infected (critical indicators found)
+- `2` - Warning (needs investigation)
+
+**Options:**
+- `--verbose` / `-v` - Detailed output with all checks
+- `--quiet` / `-q` - Exit code only, no output
+- `--json` / `-j` - JSON output format
+
+Example:
+```
+$ vtk scan machine --quiet && echo "Clean" || echo "Check machine!"
+```
+
+---
+
 ### Help
 
 For helpful information about commands and subcommands run the following:
@@ -74,6 +107,7 @@ For helpful information about commands and subcommands run the following:
     $ vtk -h
     $ vtk module -h
     $ vtk socks -h
+    $ vtk scan -h
 
 ### Docker
 

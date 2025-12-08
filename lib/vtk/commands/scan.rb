@@ -11,6 +11,8 @@ module Vtk
       desc 'machine', 'Check for active malware infection indicators (Shai-Hulud)'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
+      method_option :verbose, aliases: '-v', type: :boolean,
+                              desc: 'Detailed output with all checks'
       method_option :json, aliases: '-j', type: :boolean,
                            desc: 'Output results as JSON'
       method_option :quiet, aliases: '-q', type: :boolean,
