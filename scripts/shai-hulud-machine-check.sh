@@ -6,8 +6,6 @@
 # Quick script to check if your machine shows signs of active Shai-Hulud infection.
 # This is a FAST check (~5 seconds) for infection indicators only.
 #
-# For full lockfile/dependency scanning, use: scan-machine-shai-hulud.sh
-#
 # WHAT THIS CHECKS:
 #
 #   CRITICAL (Active Infection):
@@ -349,7 +347,7 @@ elif [ ${#HIGH_FINDINGS[@]} -gt 0 ]; then
   log "${BOLD}RECOMMENDED ACTIONS:${NC}"
   log "  1. Verify if Bun/Trufflehog were installed intentionally"
   log "  2. If not intentional, treat as potentially infected"
-  log "  3. Run full dependency scan with scan-machine-shai-hulud.sh"
+  log "  3. Investigate further before running any package manager commands"
   EXIT_CODE=2
 else
   log "${GREEN}${BOLD}  STATUS: CLEAN${NC}"
@@ -358,8 +356,8 @@ else
   log "${GREEN}No active infection indicators detected.${NC}"
   log ""
   log "Next steps:"
-  log "  - Run full dependency scan: ./scan-machine-shai-hulud.sh"
   log "  - Verify your repos don't have compromised packages"
+  log "  - Check your lockfiles for known malicious packages"
 fi
 
 log ""
