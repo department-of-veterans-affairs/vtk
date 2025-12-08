@@ -39,7 +39,7 @@ module Vtk
           cmd << '--quiet' if options[:quiet]
 
           system(*cmd)
-          exit $CHILD_STATUS.exitstatus
+          $CHILD_STATUS.exitstatus
         end
 
         def find_script

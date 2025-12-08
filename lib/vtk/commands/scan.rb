@@ -22,7 +22,8 @@ module Vtk
           invoke :help, ['machine']
         else
           require_relative 'scan/machine'
-          Vtk::Commands::Scan::Machine.new(options).execute
+          exit_status = Vtk::Commands::Scan::Machine.new(options).execute
+          exit exit_status
         end
       end
 
