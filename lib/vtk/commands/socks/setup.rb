@@ -208,7 +208,7 @@ module Vtk
           @repo_url ||= begin
             keyscan_github_com
 
-            if github_ssh_configured
+            if github_ssh_configured?
               'git@github.com:department-of-veterans-affairs/devops.git'
             else
               'https://github.com/department-of-veterans-affairs/devops.git'
@@ -222,7 +222,7 @@ module Vtk
           `ssh-keyscan -H github.com >> ~/.ssh/known_hosts 2> /dev/null`
         end
 
-        def github_ssh_configured
+        def github_ssh_configured?
           !`ssh -T git@github.com 2>&1`.include?('Permission denied')
         end
 
@@ -459,12 +459,10 @@ module Vtk
         def ubuntu_configure_system_proxy
           return true if `gsettings get org.gnome.system.proxy mode` == "'auto'\n"
 
-          # rubocop:disable Lint/LiteralAsCondition
           log 'Configuring system proxy to use SOCKS tunnel...' do
-            `gsettings set org.gnome.system.proxy mode 'auto'` &&
-              `gsettings set org.gnome.system.proxy autoconfig-url "#{PROXY_URL}"`
+            system("gsettings set org.gnome.system.proxy mode 'auto'") &&
+              system("gsettings set org.gnome.system.proxy autoconfig-url '#{PROXY_URL}'")
           end
-          # rubocop:enable Lint/LiteralAsCondition
         end
 
         def wsl_configure_system_proxy
