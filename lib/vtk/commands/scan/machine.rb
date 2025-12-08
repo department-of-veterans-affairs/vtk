@@ -18,17 +18,17 @@ module Vtk
         def execute(output: $stdout)
           @output = output
 
-          script_path = find_script
-          return script_not_found(output) unless script_path
+          script_path, gem_root = find_script
+          return script_not_found(output, gem_root) unless script_path
 
           run_script(script_path)
         end
 
         private
 
-        def script_not_found(output)
+        def script_not_found(output, gem_root)
           output.puts 'ERROR: Could not find shai-hulud-machine-check.sh script'
-          output.puts 'Expected at: <vtk-gem-path>/scripts/shai-hulud-machine-check.sh'
+          output.puts "Expected at: #{gem_root}/scripts/shai-hulud-machine-check.sh"
           1
         end
 
@@ -49,9 +49,9 @@ module Vtk
           script_path = File.join(gem_root, 'scripts', 'shai-hulud-machine-check.sh')
 
           # Use explicit bash interpreter, so executable bit not required
-          return script_path if File.exist?(script_path)
+          return [script_path, gem_root] if File.exist?(script_path)
 
-          nil
+          [nil, gem_root]
         end
       end
     end
