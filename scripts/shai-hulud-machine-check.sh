@@ -207,6 +207,37 @@ if [ "$MALWARE_FOUND" = false ]; then
   log_verbose "  ${GREEN}No malware files detected${NC}"
 fi
 
+# 4. Check for backdoor workflow files
+log_verbose ""
+log_verbose "Checking for backdoor workflow files..."
+BACKDOOR_FOUND=false
+# Search for discussion.yaml in .github/workflows directories under ~/Code or common project locations
+# The malicious workflow contains: runs-on: self-hosted AND ${{ github.event.discussion.body }}
+for base_dir in "$HOME/Code" "$HOME/Projects" "$HOME/src" "$HOME/dev" "$HOME/workspace"; do
+  if [ -d "$base_dir" ]; then
+    FOUND=$(find "$base_dir" -maxdepth 5 -path "*/.github/workflows/discussion.yaml" -type f 2>/dev/null | head -10)
+    if [ -n "$FOUND" ]; then
+      while IFS= read -r f; do
+        # Check if file contains the malicious pattern
+        if grep -q "self-hosted" "$f" 2>/dev/null && grep -q "github.event.discussion" "$f" 2>/dev/null; then
+          log_critical "Backdoor workflow: $f"
+          log_verbose "  ${RED}[CRITICAL]${NC} BACKDOOR WORKFLOW FOUND: $f"
+          log_verbose "  This workflow uses self-hosted runner with discussion body injection."
+          BACKDOOR_FOUND=true
+        else
+          log_high "Unverified discussion.yaml: $f"
+          log_verbose "  ${YELLOW}[HIGH]${NC} UNVERIFIED WORKFLOW: $f"
+          log_verbose "  Found discussion.yaml - please verify this is legitimate."
+        fi
+      done <<< "$FOUND"
+    fi
+  fi
+done
+
+if [ "$BACKDOOR_FOUND" = false ]; then
+  log_verbose "  ${GREEN}No backdoor workflows detected${NC}"
+fi
+
 ###########################################
 # HIGH-RISK CHECKS
 ###########################################
