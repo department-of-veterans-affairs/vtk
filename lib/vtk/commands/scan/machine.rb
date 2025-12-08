@@ -33,7 +33,7 @@ module Vtk
         end
 
         def run_script(script_path)
-          cmd = [script_path]
+          cmd = ['bash', script_path]
           cmd << '--verbose' if options[:verbose]
           cmd << '--json' if options[:json]
           cmd << '--quiet' if options[:quiet]
@@ -48,7 +48,8 @@ module Vtk
           gem_root = File.expand_path('../../../..', __dir__)
           script_path = File.join(gem_root, 'scripts', 'shai-hulud-machine-check.sh')
 
-          return script_path if File.exist?(script_path) && File.executable?(script_path)
+          # Use explicit bash interpreter, so executable bit not required
+          return script_path if File.exist?(script_path)
 
           nil
         end

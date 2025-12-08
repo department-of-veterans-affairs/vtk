@@ -417,16 +417,39 @@ log ""
 
 # JSON output mode
 if [ "$JSON" = true ]; then
-  # Build JSON
+  # Build JSON array from bash array (no jq dependency)
+  json_array() {
+    local arr=("$@")
+    if [ ${#arr[@]} -eq 0 ]; then
+      echo '[]'
+      return
+    fi
+    local result='['
+    local first=true
+    for item in "${arr[@]}"; do
+      if [ "$first" = true ]; then
+        first=false
+      else
+        result+=','
+      fi
+      # Escape quotes and backslashes for JSON
+      item="${item//\\/\\\\}"
+      item="${item//\"/\\\"}"
+      result+="\"$item\""
+    done
+    result+=']'
+    echo "$result"
+  }
+
   cat <<EOF
 {
   "status": "$([ ${#CRITICAL_FINDINGS[@]} -gt 0 ] && echo 'INFECTED' || ([ ${#HIGH_FINDINGS[@]} -gt 0 ] && echo 'WARNING' || echo 'CLEAN'))",
   "critical_count": ${#CRITICAL_FINDINGS[@]},
   "high_count": ${#HIGH_FINDINGS[@]},
   "info_count": ${#INFO_FINDINGS[@]},
-  "critical_findings": $(printf '%s\n' "${CRITICAL_FINDINGS[@]:-}" | jq -R . | jq -s . 2>/dev/null || echo '[]'),
-  "high_findings": $(printf '%s\n' "${HIGH_FINDINGS[@]:-}" | jq -R . | jq -s . 2>/dev/null || echo '[]'),
-  "info_findings": $(printf '%s\n' "${INFO_FINDINGS[@]:-}" | jq -R . | jq -s . 2>/dev/null || echo '[]'),
+  "critical_findings": $(json_array "${CRITICAL_FINDINGS[@]}"),
+  "high_findings": $(json_array "${HIGH_FINDINGS[@]}"),
+  "info_findings": $(json_array "${INFO_FINDINGS[@]}"),
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
