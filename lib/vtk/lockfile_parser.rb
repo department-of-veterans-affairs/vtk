@@ -39,7 +39,7 @@ module Vtk
       private
 
       # Parse package-lock.json (npm)
-      # Handles both v1/v2 (packages) and v3 (dependencies) formats
+      # Handles v1 (dependencies), v2 (packages + dependencies), and v3 (packages) formats
       def parse_package_lock(path)
         content = JSON.parse(File.read(path))
         packages = []
@@ -68,7 +68,7 @@ module Vtk
           packages << "#{full_name}:#{info['version']}"
 
           # Handle nested dependencies
-          extract_dependencies(info['dependencies'], packages) if info['dependencies']
+          extract_dependencies(info['dependencies'], packages, full_name) if info['dependencies']
         end
       end
 
@@ -113,7 +113,7 @@ module Vtk
           end
 
           # Exit packages section on next top-level key
-          if in_packages && line =~ /^\w+:/ && line !~ /^\s/
+          if in_packages && line =~ /^\w+:/
             in_packages = false
             next
           end

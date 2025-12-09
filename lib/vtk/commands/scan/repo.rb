@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'stringio'
 require_relative '../../command'
 require_relative '../../cache'
 require_relative '../../lockfile_parser'

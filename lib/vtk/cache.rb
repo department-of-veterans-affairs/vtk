@@ -117,7 +117,7 @@ module Vtk
 
         # Check 3: Packages must be in expected format (name:version)
         valid_format = body.lines.select { |l| l.strip =~ /^[^#]/ }.all? do |line|
-          line.strip.empty? || line.strip =~ %r{^[@a-zA-Z0-9][\w\-./]*:\d+\.\d+\.\d+}
+          line.strip.empty? || line.strip =~ %r{^[@a-zA-Z0-9][\w\-./]*:\d+\.\d+\.\d+[a-zA-Z0-9\-+.]*}
         end
 
         return if valid_format
