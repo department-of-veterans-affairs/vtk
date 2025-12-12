@@ -17,6 +17,8 @@ module Vtk
                            desc: 'Output results as JSON'
       method_option :quiet, aliases: '-q', type: :boolean,
                             desc: 'Exit code only, no output'
+      method_option :scan_dirs, type: :string,
+                                desc: 'Additional directories to scan for backdoor workflows (comma-separated)'
       def machine
         if options[:help]
           invoke :help, ['machine']

@@ -34,6 +34,7 @@
 #   ./shai-hulud-machine-check.sh --verbose    # Detailed output
 #   ./shai-hulud-machine-check.sh --quiet      # Exit code only
 #   ./shai-hulud-machine-check.sh --json       # JSON output
+#   ./shai-hulud-machine-check.sh --scan-dirs=~/repos,~/work  # Additional dirs
 #
 # References:
 #   - Wiz.io: https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack
@@ -50,20 +51,37 @@ set -e
 QUIET=false
 JSON=false
 VERBOSE=false
+EXTRA_SCAN_DIRS=""
 for arg in "$@"; do
   case $arg in
     --quiet|-q) QUIET=true ;;
     --json|-j) JSON=true ;;
     --verbose|-v) VERBOSE=true ;;
+    --scan-dirs=*) EXTRA_SCAN_DIRS="${arg#*=}" ;;
     --help|-h)
-      echo "Usage: $0 [--verbose|-v] [--quiet|-q] [--json|-j]"
-      echo "  --verbose  Detailed output with all checks"
-      echo "  --quiet    Exit code only, no output"
-      echo "  --json     JSON output format"
+      echo "Usage: $0 [--verbose|-v] [--quiet|-q] [--json|-j] [--scan-dirs=DIR1,DIR2,...]"
+      echo "  --verbose    Detailed output with all checks"
+      echo "  --quiet      Exit code only, no output"
+      echo "  --json       JSON output format"
+      echo "  --scan-dirs  Additional directories to scan for backdoor workflows (comma-separated)"
       exit 0
       ;;
   esac
 done
+
+# Default directories to scan for backdoor workflows
+DEFAULT_SCAN_DIRS=("$HOME/Code" "$HOME/Projects" "$HOME/src" "$HOME/dev" "$HOME/workspace")
+
+# Build final scan dirs list
+SCAN_DIRS=("${DEFAULT_SCAN_DIRS[@]}")
+if [ -n "$EXTRA_SCAN_DIRS" ]; then
+  IFS=',' read -ra EXTRA_DIRS <<< "$EXTRA_SCAN_DIRS"
+  for dir in "${EXTRA_DIRS[@]}"; do
+    # Expand ~ to $HOME
+    expanded_dir="${dir/#\~/$HOME}"
+    SCAN_DIRS+=("$expanded_dir")
+  done
+fi
 
 # Results tracking
 CRITICAL_FINDINGS=()
@@ -225,10 +243,19 @@ fi
 # 4. Check for backdoor workflow files
 log_verbose ""
 log_verbose "Checking for backdoor workflow files..."
+log_verbose "  Scanning directories:"
+for dir in "${SCAN_DIRS[@]}"; do
+  if [ -d "$dir" ]; then
+    log_verbose "    - $dir"
+  else
+    log_verbose "    - $dir ${YELLOW}(not found)${NC}"
+  fi
+done
+log_verbose ""
 BACKDOOR_FOUND=false
-# Search for discussion.yaml in .github/workflows directories under ~/Code or common project locations
+# Search for discussion.yaml in .github/workflows directories
 # The malicious workflow contains: runs-on: self-hosted AND ${{ github.event.discussion.body }}
-for base_dir in "$HOME/Code" "$HOME/Projects" "$HOME/src" "$HOME/dev" "$HOME/workspace"; do
+for base_dir in "${SCAN_DIRS[@]}"; do
   if [ -d "$base_dir" ]; then
     FOUND=$(find "$base_dir" -maxdepth 5 -path "*/.github/workflows/discussion.yaml" -type f 2>/dev/null | head -10)
     if [ -n "$FOUND" ]; then

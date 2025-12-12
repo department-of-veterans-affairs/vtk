@@ -37,6 +37,7 @@ module Vtk
           cmd << '--verbose' if options[:verbose]
           cmd << '--json' if options[:json]
           cmd << '--quiet' if options[:quiet]
+          cmd << "--scan-dirs=#{options[:scan_dirs]}" if options[:scan_dirs]
 
           system(*cmd)
           $CHILD_STATUS.exitstatus
