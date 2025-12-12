@@ -10,6 +10,7 @@
 #
 #   CRITICAL (Active Infection):
 #     - ~/.dev-env/ persistence folder (contains GitHub self-hosted runner)
+#     - ~/.truffler-cache/ malware cache (NOT legit Trufflehog which uses ~/.trufflehog/)
 #     - Running processes: Runner.Listener, SHA1HULUD, suspicious node/bun
 #     - Malware files: setup_bun.js, bun_environment.js
 #     - Backdoor workflows: .github/workflows/discussion.yaml
@@ -134,6 +135,20 @@ else
   log_verbose "  ${GREEN}Not found${NC}"
 fi
 
+# 1b. Check for ~/.truffler-cache/ (malware-specific Trufflehog cache)
+log_verbose ""
+log_verbose "Checking for malware Trufflehog cache (~/.truffler-cache/)..."
+if [ -d "$HOME/.truffler-cache" ]; then
+  log_critical "~/.truffler-cache/ malware cache found"
+  log_verbose "  ${RED}[CRITICAL]${NC} MALWARE CACHE FOUND: ~/.truffler-cache/"
+  log_verbose "  This is a MALWARE-SPECIFIC path (legit Trufflehog uses ~/.trufflehog/)."
+  log_verbose "  The malware stores its Trufflehog binary here to scan for secrets."
+  log_verbose "  Contents:"
+  ls -la "$HOME/.truffler-cache" 2>/dev/null | head -10 | while read line; do log_verbose "    $line"; done
+else
+  log_verbose "  ${GREEN}Not found${NC}"
+fi
+
 # 2. Check for malicious running processes
 log_verbose ""
 log_verbose "Checking for malicious processes..."
@@ -248,7 +263,7 @@ log_verbose ""
 
 # 4. Check for exfiltration artifacts
 log_verbose "Checking for exfiltration artifacts..."
-EXFIL_FILES=("cloud.json" "truffleSecrets.json" "environment.json" "actionsSecrets.json")
+EXFIL_FILES=("cloud.json" "truffleSecrets.json" "environment.json" "actionsSecrets.json" "contents.json")
 EXFIL_FOUND=false
 for file in "${EXFIL_FILES[@]}"; do
   # Check home directory and common locations
