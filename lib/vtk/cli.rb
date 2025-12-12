@@ -23,5 +23,8 @@ module Vtk
 
     require_relative 'commands/module'
     register Vtk::Commands::Module, 'module', 'module [SUBCOMMAND]', 'Command description...'
+
+    require_relative 'commands/scan'
+    register Vtk::Commands::Scan, 'scan', 'scan [SUBCOMMAND]', 'Security scanning for malware and vulnerabilities'
   end
 end
