@@ -30,7 +30,7 @@
 #   ./shai-hulud-repo-check.sh --refresh [PATH]    # Force refresh package list
 #
 # KNOWN LIMITATIONS:
-#   - pnpm-lock.yaml parsing tested with pnpm v6/v7; v9+ format may vary
+#   - pnpm-lock.yaml parsing tested with pnpm v6/v7/v9; other versions may vary
 #   - Does not scan node_modules directly (lockfile is source of truth)
 #   - Short flags cannot be combined (use "-r -j" not "-rj")
 #

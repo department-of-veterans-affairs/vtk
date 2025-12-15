@@ -91,7 +91,7 @@ Both scan commands are available as standalone shell scripts that work without v
 
 ## Known Limitations
 
-- **pnpm-lock.yaml** - Parsing tested with pnpm v6/v7; pnpm v9+ lockfile format may vary
+- **pnpm-lock.yaml** - Parsing tested with pnpm v6/v7/v9; other versions may vary
 - **node_modules** - Not scanned directly; lockfile is the source of truth (by design)
 - **Short flags** - Cannot be combined in shell script (use `-r -j` not `-rj`)
 
