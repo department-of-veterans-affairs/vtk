@@ -16,20 +16,3 @@ Style/OpenStructUse:
   Exclude:
     - 'lib/vtk/commands/socks/setup.rb'
 
-# Security scanning code has complex parsing logic
-# that benefits from being in longer, self-contained methods
-Metrics/AbcSize:
-  Exclude:
-    - 'lib/vtk/cache.rb'
-    - 'lib/vtk/lockfile_parser.rb'
-    - 'lib/vtk/commands/scan/repo.rb'
-
-Metrics/MethodLength:
-  Exclude:
-    - 'lib/vtk/cache.rb'
-    - 'lib/vtk/lockfile_parser.rb'
-    - 'lib/vtk/commands/scan/repo.rb'
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'lib/vtk/commands/scan/repo.rb'

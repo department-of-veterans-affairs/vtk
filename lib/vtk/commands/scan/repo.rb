@@ -40,17 +40,23 @@ module Vtk
         end
 
         def run_script(script_path)
-          cmd = ['bash', script_path]
-          cmd << '--refresh' if options[:refresh]
-          cmd << '--json' if options[:json]
-          cmd << '--quiet' if options[:quiet]
-          cmd << '--verbose' if options[:verbose]
-          cmd << '--recursive' if options[:recursive]
-          cmd << "--depth=#{options[:depth]}" if options[:depth]
-          cmd << @path
-
+          cmd = ['bash', script_path] + script_options + [@path]
           system(*cmd)
           $CHILD_STATUS.exitstatus
+        end
+
+        OPTION_FLAGS = {
+          refresh: '--refresh',
+          json: '--json',
+          quiet: '--quiet',
+          verbose: '--verbose',
+          recursive: '--recursive'
+        }.freeze
+
+        def script_options
+          flags = OPTION_FLAGS.filter_map { |key, flag| flag if options[key] }
+          flags << "--depth=#{options[:depth]}" if options[:depth]
+          flags
         end
 
         def find_script
