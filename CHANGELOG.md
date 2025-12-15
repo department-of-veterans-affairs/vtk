@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.1.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.1.0) (2025-12-15)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.0.0...v1.1.0)
+
+**Merged pull requests:**
+
+- feat(scan): add vtk scan machine for Shai-Hulud detection [\#64](https://github.com/department-of-veterans-affairs/vtk/pull/64) ([ericboehs](https://github.com/ericboehs))
+- fix: resolve rubocop offenses in socks/setup.rb [\#66](https://github.com/department-of-veterans-affairs/vtk/pull/66) ([ericboehs](https://github.com/ericboehs))
+- Fix rubocop exceptions and update GH to run on Ubuntu Latest [\#63](https://github.com/department-of-veterans-affairs/vtk/pull/63) ([ericboehs](https://github.com/ericboehs))
+
 ## [v1.0.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.0.0) (2024-09-18)
 
 🎉
