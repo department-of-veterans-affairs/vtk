@@ -10,7 +10,7 @@ module Vtk
     class Scan
       # Scan a repository for compromised packages and backdoor workflows
       class Repo < Vtk::Command
-        PLAYBOOK_URL = 'https://va.ghe.com/software/Engineering-Excellence-Response-Team/blob/main/docs/shai-hulud-repo-owner-playbook.md'
+        PLAYBOOK_URL = 'https://department-of-veterans-affairs.github.io/eert/shai-hulud-dev-machine-cleanup-playbook'
 
         attr_reader :options, :path
 
