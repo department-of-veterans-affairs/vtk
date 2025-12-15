@@ -54,9 +54,22 @@ module Vtk
         end
       end
 
-      # Future subcommands:
-      # desc 'repos', 'Scan all Node.js projects in common directories'
-      # desc 'credentials', 'Inventory credentials that may need rotation'
+      desc 'credentials', 'Audit credentials that may need rotation after a security incident'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      method_option :verbose, aliases: '-v', type: :boolean,
+                              desc: 'Show all checks including clean ones'
+      method_option :json, aliases: '-j', type: :boolean,
+                           desc: 'Output results as JSON'
+      def credentials
+        if options[:help]
+          invoke :help, ['credentials']
+        else
+          require_relative 'scan/credentials'
+          exit_status = Vtk::Commands::Scan::Credentials.new(options).execute
+          exit exit_status
+        end
+      end
     end
   end
 end
