@@ -25,14 +25,26 @@ module Vtk
 
     # Find lockfiles in a directory
     # @param dir [String] Directory to search
+    # @param recursive [Boolean] Whether to search recursively in subdirectories
     # @return [Array<String>] Paths to lockfiles found
-    def self.find_lockfiles(dir)
+    def self.find_lockfiles(dir, recursive: false)
       lockfiles = []
-      %w[package-lock.json yarn.lock pnpm-lock.yaml].each do |name|
-        path = File.join(dir, name)
-        lockfiles << path if File.exist?(path)
+      lockfile_names = %w[package-lock.json yarn.lock pnpm-lock.yaml]
+
+      if recursive
+        lockfile_names.each do |name|
+          Dir.glob(File.join(dir, '**', name)).each do |path|
+            lockfiles << path
+          end
+        end
+      else
+        lockfile_names.each do |name|
+          path = File.join(dir, name)
+          lockfiles << path if File.exist?(path)
+        end
       end
-      lockfiles
+
+      lockfiles.sort
     end
 
     class << self
