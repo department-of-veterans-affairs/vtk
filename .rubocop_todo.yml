@@ -15,4 +15,3 @@ Metrics/ClassLength:
 Style/OpenStructUse:
   Exclude:
     - 'lib/vtk/commands/socks/setup.rb'
-
