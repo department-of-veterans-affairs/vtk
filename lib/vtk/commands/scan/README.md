@@ -89,6 +89,12 @@ Both scan commands are available as standalone shell scripts that work without v
 ./scripts/shai-hulud-repo-check.sh -r --json    # JSONL output
 ```
 
+## Known Limitations
+
+- **pnpm-lock.yaml** - Parsing tested with pnpm v6/v7; pnpm v9+ lockfile format may vary
+- **node_modules** - Not scanned directly; lockfile is the source of truth (by design)
+- **Short flags** - Cannot be combined in shell script (use `-r -j` not `-rj`)
+
 ## References
 
 - [Datadog: Shai-Hulud 2.0 npm Worm](https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/)

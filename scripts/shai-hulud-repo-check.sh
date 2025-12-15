@@ -23,10 +23,16 @@
 #
 # USAGE:
 #   ./shai-hulud-repo-check.sh [PATH]              # Scan directory (default: current dir)
-#   ./shai-hulud-repo-check.sh -R [PATH]           # Recursive scan
+#   ./shai-hulud-repo-check.sh -r [PATH]           # Recursive scan (default depth: 5)
+#   ./shai-hulud-repo-check.sh --depth=0 [PATH]    # Recursive with unlimited depth
 #   ./shai-hulud-repo-check.sh --json [PATH]       # JSON output
 #   ./shai-hulud-repo-check.sh --quiet [PATH]      # Exit code only
 #   ./shai-hulud-repo-check.sh --refresh [PATH]    # Force refresh package list
+#
+# KNOWN LIMITATIONS:
+#   - pnpm-lock.yaml parsing tested with pnpm v6/v7; v9+ format may vary
+#   - Does not scan node_modules directly (lockfile is source of truth)
+#   - Short flags cannot be combined (use "-r -j" not "-rj")
 #
 # References:
 #   - https://department-of-veterans-affairs.github.io/eert/shai-hulud-dev-machine-cleanup-playbook
