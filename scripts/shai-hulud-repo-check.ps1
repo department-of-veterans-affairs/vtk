@@ -287,8 +287,8 @@ function Parse-YarnLock {
 
     $currentPkg = ""
     foreach ($line in $content) {
-        # Package header line
-        if ($line -match '^"?([^@][^"@]*)@' -or $line -match '^"?(@[^/]+/[^@"]+)@') {
+        # Package header line - check scoped packages (@scope/name) FIRST to avoid false matches
+        if ($line -match '^"?(@[^/]+/[^@"]+)@' -or $line -match '^"?([^@][^"@]*)@') {
             $currentPkg = $matches[1]
         }
         # Version line
