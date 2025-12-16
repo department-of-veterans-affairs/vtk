@@ -98,6 +98,46 @@ Example:
 $ vtk scan machine --quiet && echo "Clean" || echo "Check machine!"
 ```
 
+#### Windows (PowerShell)
+
+For Windows users, standalone PowerShell scripts are available that don't require Ruby or the vtk gem.
+
+**Requirements:** PowerShell 5.1+ (ships with Windows 10/11). PowerShell 7+ recommended for best experience.
+
+**Download and run:**
+
+```powershell
+# Machine scanner - checks for active infection
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/department-of-veterans-affairs/vtk/master/scripts/shai-hulud-machine-check.ps1" -OutFile "shai-hulud-machine-check.ps1"
+
+# Allow script execution (if needed)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Run the scanner
+.\shai-hulud-machine-check.ps1
+.\shai-hulud-machine-check.ps1 -Verbose  # Detailed output
+.\shai-hulud-machine-check.ps1 -Json     # JSON output
+```
+
+**Repository scanner** - checks lockfiles for compromised packages:
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/department-of-veterans-affairs/vtk/master/scripts/shai-hulud-repo-check.ps1" -OutFile "shai-hulud-repo-check.ps1"
+
+.\shai-hulud-repo-check.ps1                    # Scan current directory
+.\shai-hulud-repo-check.ps1 -Path C:\Code\app  # Scan specific directory
+.\shai-hulud-repo-check.ps1 -Recursive         # Recursive scan
+```
+
+**Credential audit** - lists credentials that may need rotation:
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/department-of-veterans-affairs/vtk/master/scripts/credential-audit.ps1" -OutFile "credential-audit.ps1"
+
+.\credential-audit.ps1
+.\credential-audit.ps1 -Verbose  # Show all checks
+```
+
 ---
 
 ### Help
