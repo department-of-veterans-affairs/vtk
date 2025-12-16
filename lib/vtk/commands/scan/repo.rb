@@ -9,6 +9,14 @@ module Vtk
       # Scan a repository for compromised packages and backdoor workflows
       # Shells out to shai-hulud-repo-check.sh for the actual scanning
       class Repo < Vtk::Command
+        OPTION_FLAGS = {
+          refresh: '--refresh',
+          json: '--json',
+          quiet: '--quiet',
+          verbose: '--verbose',
+          recursive: '--recursive'
+        }.freeze
+
         attr_reader :options, :path
 
         def initialize(path, options)
@@ -44,14 +52,6 @@ module Vtk
           system(*cmd)
           $CHILD_STATUS.exitstatus
         end
-
-        OPTION_FLAGS = {
-          refresh: '--refresh',
-          json: '--json',
-          quiet: '--quiet',
-          verbose: '--verbose',
-          recursive: '--recursive'
-        }.freeze
 
         def script_options
           flags = OPTION_FLAGS.filter_map { |key, flag| flag if options[key] }
