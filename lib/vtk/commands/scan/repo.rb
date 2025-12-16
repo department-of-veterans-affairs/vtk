@@ -54,7 +54,8 @@ module Vtk
         end
 
         def script_options
-          flags = OPTION_FLAGS.filter_map { |key, flag| flag if options[key] }
+          # Use select + map instead of filter_map for Ruby 2.6 compatibility
+          flags = OPTION_FLAGS.select { |key, _flag| options[key] }.values
           flags << "--depth=#{options[:depth]}" if options[:depth]
           flags
         end
