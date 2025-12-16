@@ -15,6 +15,11 @@ module Vtk
           super()
         end
 
+        OPTION_FLAGS = {
+          verbose: '--verbose',
+          json: '--json'
+        }.freeze
+
         def execute(output: $stdout)
           @output = output
 
@@ -31,11 +36,6 @@ module Vtk
           output.puts "Expected at: #{gem_root}/scripts/credential-audit.sh"
           1
         end
-
-        OPTION_FLAGS = {
-          verbose: '--verbose',
-          json: '--json'
-        }.freeze
 
         def run_script(script_path)
           cmd = ['bash', script_path]
