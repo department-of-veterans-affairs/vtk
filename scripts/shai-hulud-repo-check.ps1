@@ -14,7 +14,7 @@
 
       Backdoor Workflows (.github\workflows\):
         - discussion.yaml: Self-hosted runner with unescaped discussion body
-        - formatter_*.yml: Secrets extraction workflows
+        - formatter_[0-9]*.yml: Timestamp-based secrets extraction workflows
 
     EXIT CODES:
       0 - Clean (no issues found)
@@ -432,7 +432,9 @@ function Check-DiscussionBackdoor {
 function Check-FormatterBackdoor {
     param([string]$WorkflowsDir)
 
-    $formatterFiles = Get-ChildItem -Path $WorkflowsDir -Filter "formatter_*.yml" -ErrorAction SilentlyContinue
+    # Match timestamp-based formatter files (formatter_ + digits) per Wiz report
+    # This reduces false positives on legitimate files like formatter_config.yml
+    $formatterFiles = Get-ChildItem -Path $WorkflowsDir -Filter "formatter_[0-9]*.yml" -ErrorAction SilentlyContinue
 
     foreach ($file in $formatterFiles) {
         [void]$script:BackdoorFindings.Add([PSCustomObject]@{
