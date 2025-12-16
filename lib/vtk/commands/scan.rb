@@ -29,8 +29,33 @@ module Vtk
         end
       end
 
+      desc 'repo [PATH]', 'Scan a repository for compromised packages'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      method_option :refresh, type: :boolean,
+                              desc: 'Force refresh of compromised packages list'
+      method_option :json, aliases: '-j', type: :boolean,
+                           desc: 'Output results as JSON'
+      method_option :quiet, aliases: '-q', type: :boolean,
+                            desc: 'Exit code only, no output'
+      method_option :verbose, aliases: '-v', type: :boolean,
+                              desc: 'Show each lockfile as it is scanned'
+      method_option :recursive, aliases: '-r', type: :boolean,
+                                desc: 'Recursively scan subdirectories (default depth: 5)'
+      method_option :depth, type: :numeric, default: 5,
+                            desc: 'Max directory depth for recursive scan (0=unlimited)'
+      def repo(path = nil)
+        if options[:help]
+          invoke :help, ['repo']
+        else
+          require_relative 'scan/repo'
+          exit_status = Vtk::Commands::Scan::Repo.new(path, options).execute
+          exit exit_status
+        end
+      end
+
       # Future subcommands:
-      # desc 'repos', 'Scan lockfiles for compromised packages'
+      # desc 'repos', 'Scan all Node.js projects in common directories'
       # desc 'credentials', 'Inventory credentials that may need rotation'
     end
   end
