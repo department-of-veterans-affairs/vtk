@@ -8,6 +8,12 @@ require 'json'
 RSpec.describe '`vtk scan repo` command', type: :cli do
   let(:tmpdir) { Dir.mktmpdir('vtk-scan-repo-test') }
   let(:vtk) { 'bundle exec vtk' }
+  let(:fixtures_path) { File.expand_path('../../fixtures/scan/repo', __dir__) }
+
+  # Copy a fixture directory to tmpdir for testing
+  def use_fixture(name)
+    FileUtils.cp_r("#{fixtures_path}/#{name}/.", tmpdir)
+  end
 
   after do
     FileUtils.rm_rf(tmpdir)
@@ -37,18 +43,8 @@ RSpec.describe '`vtk scan repo` command', type: :cli do
     expect(output).to include('CLEAN')
   end
 
-  context 'with package-lock.json' do
-    before do
-      # Create a clean package-lock.json
-      File.write(File.join(tmpdir, 'package-lock.json'), {
-        'name' => 'test-project',
-        'lockfileVersion' => 3,
-        'packages' => {
-          '' => { 'name' => 'test-project', 'version' => '1.0.0' },
-          'node_modules/safe-package' => { 'version' => '1.0.0' }
-        }
-      }.to_json)
-    end
+  context 'with clean package-lock.json' do
+    before { use_fixture('clean') }
 
     it 'scans package-lock.json and reports clean' do
       output = `#{vtk} scan repo #{tmpdir} 2>&1`
@@ -75,18 +71,7 @@ RSpec.describe '`vtk scan repo` command', type: :cli do
   end
 
   context 'with compromised package' do
-    before do
-      # Create a package-lock.json with a known compromised package
-      # @ctrl/tinycolor:4.1.1 is in the compromised list
-      File.write(File.join(tmpdir, 'package-lock.json'), {
-        'name' => 'test-project',
-        'lockfileVersion' => 3,
-        'packages' => {
-          '' => { 'name' => 'test-project', 'version' => '1.0.0' },
-          'node_modules/@ctrl/tinycolor' => { 'version' => '4.1.1' }
-        }
-      }.to_json)
-    end
+    before { use_fixture('compromised') }
 
     it 'detects compromised package and reports infected' do
       output = `#{vtk} scan repo #{tmpdir} 2>&1`
@@ -109,34 +94,26 @@ RSpec.describe '`vtk scan repo` command', type: :cli do
 
       result = JSON.parse(output)
       expect(result['status']).to include('INFECTED')
-      expect(result['compromised_packages'].length).to eq(1)
-      expect(result['compromised_packages'].first['package']).to eq('@ctrl/tinycolor:4.1.1')
+      expect(result['compromised_packages'].length).to be >= 1
+      packages = result['compromised_packages'].map { |p| p['package'] }
+      expect(packages).to include('@ctrl/tinycolor:4.1.1')
+    end
+  end
+
+  context 'with pretty-printed package-lock.json' do
+    before { use_fixture('pretty-printed') }
+
+    it 'detects compromised package in pretty-printed JSON' do
+      output = `#{vtk} scan repo #{tmpdir} 2>&1`
+
+      expect(output).to include('COMPROMISED PACKAGES FOUND')
+      expect(output).to include('@ctrl/tinycolor:4.1.1')
+      expect(output).to include('INFECTED')
     end
   end
 
   context 'with backdoor workflow' do
-    before do
-      # Create a malicious discussion.yaml workflow
-      workflows_dir = File.join(tmpdir, '.github', 'workflows')
-      FileUtils.mkdir_p(workflows_dir)
-
-      File.write(File.join(workflows_dir, 'discussion.yaml'), <<~YAML)
-        name: Discussion Handler
-        on: discussion
-        jobs:
-          handle:
-            runs-on: self-hosted
-            steps:
-              - run: echo "${{ github.event.discussion.body }}"
-      YAML
-
-      # Also need a lockfile to avoid the "no lockfiles" warning
-      File.write(File.join(tmpdir, 'package-lock.json'), {
-        'name' => 'test-project',
-        'lockfileVersion' => 3,
-        'packages' => {}
-      }.to_json)
-    end
+    before { use_fixture('backdoor') }
 
     it 'detects backdoor workflow and reports warning' do
       output = `#{vtk} scan repo #{tmpdir} 2>&1`
@@ -146,42 +123,19 @@ RSpec.describe '`vtk scan repo` command', type: :cli do
       expect(output).to include('discussion_backdoor')
     end
 
+    it 'detects secrets extraction workflow' do
+      output = `#{vtk} scan repo #{tmpdir} 2>&1`
+
+      expect(output).to include('BACKDOOR WORKFLOWS FOUND')
+      expect(output).to include('formatter_')
+      expect(output).to include('secrets_extraction')
+    end
+
     it 'returns exit code 2 for backdoor workflow' do
       `#{vtk} scan repo #{tmpdir} --quiet 2>&1`
       exit_code = $CHILD_STATUS.exitstatus
 
       expect(exit_code).to eq(2)
-    end
-  end
-
-  context 'with formatter workflow (secrets extraction)' do
-    before do
-      workflows_dir = File.join(tmpdir, '.github', 'workflows')
-      FileUtils.mkdir_p(workflows_dir)
-
-      File.write(File.join(workflows_dir, 'formatter_123456789.yml'), <<~YAML)
-        name: Formatter
-        on: push
-        jobs:
-          extract:
-            runs-on: ubuntu-latest
-            steps:
-              - run: echo "secrets"
-      YAML
-
-      File.write(File.join(tmpdir, 'package-lock.json'), {
-        'name' => 'test-project',
-        'lockfileVersion' => 3,
-        'packages' => {}
-      }.to_json)
-    end
-
-    it 'detects secrets extraction workflow' do
-      output = `#{vtk} scan repo #{tmpdir} 2>&1`
-
-      expect(output).to include('BACKDOOR WORKFLOWS FOUND')
-      expect(output).to include('formatter_123456789.yml')
-      expect(output).to include('secrets_extraction')
     end
   end
 

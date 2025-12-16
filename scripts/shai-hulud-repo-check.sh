@@ -272,20 +272,59 @@ parse_package_lock() {
   local file="$1"
 
   # Handle both v2/v3 format (packages) and v1 format (dependencies)
-  # Using grep and sed for portability (no jq dependency)
-  # Regex allows for optional spaces to handle both formatted and compact JSON
+  # Using sed+awk for portability (no jq dependency)
+  # Works with both pretty-printed and minified JSON
 
   # v2/v3: Extract from "packages" section
-  # Format: "node_modules/package-name": { "version": "1.2.3" }
-  # or compact: "node_modules/package-name":{"version":"1.2.3"}
-  grep -oE '"node_modules/[^"]+": *\{[^}]*"version": *"[^"]+"' "$file" 2>/dev/null | \
-    sed -E 's/"node_modules\/([^"]+)": *\{.*"version": *"([^"]+)".*/\1:\2/' || true
+  # Preprocess: add newlines before each "node_modules/ to handle minified JSON
+  # Then use awk to match package name and version across lines
+  sed 's/"node_modules\//\n"node_modules\//g' "$file" 2>/dev/null | \
+  awk '
+    /"node_modules\/[^"]+":/ {
+      # Extract package name: remove everything before "node_modules/ and after closing "
+      pkg = $0
+      sub(/.*"node_modules\//, "", pkg)
+      sub(/".*/, "", pkg)
+    }
+    /"version":/ && pkg != "" {
+      # Extract version: find "version": "X.Y.Z" pattern
+      ver = $0
+      sub(/.*"version": *"/, "", ver)
+      sub(/".*/, "", ver)
+      if (ver != "") {
+        print pkg ":" ver
+        pkg = ""
+      }
+    }
+  ' 2>/dev/null || true
 
-  # v1: Extract from "dependencies" section (simpler format)
-  # This is a simplified extraction - handles top-level deps
-  grep -oE '"[^"]+": *\{[^}]*"version": *"[0-9]+\.[0-9]+\.[0-9]+[^"]*"' "$file" 2>/dev/null | \
-    grep -v "node_modules" | \
-    sed -E 's/"([^"]+)": *\{.*"version": *"([^"]+)".*/\1:\2/' || true
+  # v1: Extract from "dependencies" section (top-level deps without node_modules path)
+  # Preprocess: add newlines before each opening brace to separate entries
+  sed 's/": *{/": {\n/g' "$file" 2>/dev/null | \
+  awk '
+    /"[^"]+": *\{/ && !/node_modules/ && !/packages/ {
+      # Potential package name line - extract the key
+      pkg = $0
+      sub(/.*"/, "", pkg)
+      sub(/":.*/, "", pkg)
+      # Skip metadata keys
+      if (pkg ~ /^(name|lockfileVersion|requires|dependencies|devDependencies|optionalDependencies)$/) {
+        pkg = ""
+      }
+    }
+    /"version":/ && pkg != "" {
+      ver = $0
+      sub(/.*"version": *"/, "", ver)
+      sub(/".*/, "", ver)
+      # Only accept semver-like versions
+      if (ver ~ /^[0-9]+\.[0-9]+\.[0-9]/) {
+        print pkg ":" ver
+        pkg = ""
+      }
+    }
+    # Reset pkg when we exit a block
+    /^\s*\}/ { pkg = "" }
+  ' 2>/dev/null || true
 }
 
 # Parse yarn.lock and extract package:version pairs
@@ -296,14 +335,16 @@ parse_yarn_lock() {
   # "package@^1.0.0":
   #   version "1.2.3"
   awk '
-    /^"?[^#@][^"]*@/ {
+    /^"?[^#@][^"]*@/ || /^"?@/ {
       # Extract package name (before the @version specifier)
+      # Save original line to check for scoped packages
+      original = $0
       gsub(/^"/, "", $0)
       gsub(/".*/, "", $0)
       split($0, parts, "@")
-      if (parts[1] ~ /^@/) {
-        # Scoped package: @scope/name
-        pkg = parts[1] "@" parts[2]
+      if (original ~ /^"?@/ || parts[1] == "") {
+        # Scoped package: @scope/name (parts[1] is empty when line starts with @)
+        pkg = "@" parts[2]
       } else {
         pkg = parts[1]
       }
@@ -536,7 +577,9 @@ check_discussion_backdoor() {
 check_formatter_backdoor() {
   local workflows_dir="$1"
 
-  for workflow in "$workflows_dir"/formatter_*.yml; do
+  # Match timestamp-based formatter files (formatter_ + digits) per Wiz report
+  # This reduces false positives on legitimate files like formatter_config.yml
+  for workflow in "$workflows_dir"/formatter_[0-9]*.yml; do
     [ -f "$workflow" ] || continue
     BACKDOOR_FINDINGS+=("$workflow|secrets_extraction")
   done
