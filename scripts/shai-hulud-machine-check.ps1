@@ -108,7 +108,8 @@ if ($ScanDirs) {
 }
 
 # Color support
-$UseColors = -not $Quiet -and -not $Json -and $Host.UI.SupportsVirtualTerminal
+# SupportsVirtualTerminal doesn't exist in PS 5.1, so check safely
+$UseColors = -not $Quiet -and -not $Json -and (($Host.UI.psobject.Properties.Name -contains 'SupportsVirtualTerminal') -and $Host.UI.SupportsVirtualTerminal)
 
 function Write-Log {
     param([string]$Message)

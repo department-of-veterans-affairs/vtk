@@ -83,8 +83,8 @@ if ($Help) {
 $script:RotationInstructions = [System.Collections.ArrayList]::new()
 $script:TotalFound = 0
 
-# Color support
-$UseColors = -not $Json -and $Host.UI.SupportsVirtualTerminal
+# Color support - SupportsVirtualTerminal doesn't exist in PS 5.1, so check safely
+$UseColors = -not $Json -and (($Host.UI.psobject.Properties.Name -contains 'SupportsVirtualTerminal') -and $Host.UI.SupportsVirtualTerminal)
 
 function Write-Log {
     param([string]$Message)
