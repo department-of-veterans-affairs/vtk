@@ -348,10 +348,12 @@ function Check-Lockfiles {
         $relPath = $lockfile.FullName.Replace($ScanPath, "").TrimStart([char[]]@('\', '/'))
 
         # Progress display
-        if ($VerbosePreference -eq 'Continue' -and -not $Quiet -and -not $Json) {
-            Write-Host "[$count/$total] $($lockfile.FullName)"
-        } elseif (-not $Quiet -and -not $Json) {
-            Write-Host "`r[$count/$total] $relPath" -NoNewline
+        if (-not $Quiet -and -not $Json) {
+            if ($VerbosePreference -eq 'Continue') {
+                Write-Host "[$count/$total] $($lockfile.FullName)"
+            } else {
+                Write-Host "[$count/$total] $relPath"
+            }
         }
 
         $packages = Parse-Lockfile $lockfile.FullName
@@ -383,9 +385,9 @@ function Check-Lockfiles {
         })
     }
 
-    # Clear progress line
-    if (-not $Quiet -and -not $Json -and $VerbosePreference -ne 'Continue') {
-        Write-Host "`rScanned $total lockfiles ($($script:TotalPackagesScanned) packages).                    "
+    # Summary line
+    if (-not $Quiet -and -not $Json) {
+        Write-Host "Scanned $total lockfiles ($($script:TotalPackagesScanned) packages)."
     }
 }
 
