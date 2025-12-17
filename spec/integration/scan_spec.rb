@@ -6,5 +6,6 @@ RSpec.describe '`vtk scan` command', type: :cli do
 
     expect(output).to include('vtk scan help [COMMAND]')
     expect(output).to include('vtk scan machine')
+    expect(output).to include('vtk scan credentials')
   end
 end

@@ -100,6 +100,41 @@ $ vtk scan machine --quiet && echo "Clean" || echo "Check machine!"
 
 ---
 
+```
+$ vtk scan credentials
+```
+
+The **credentials subcommand** audits which credentials are present on your machine and provides rotation instructions for each. Run this after a suspected or confirmed security incident.
+
+**What it checks:**
+- **NPM**: `~/.npmrc`, `$NPM_TOKEN`, `$NPM_CONFIG_TOKEN`
+- **AWS**: `~/.aws/credentials`, `~/.aws/config`, `$AWS_ACCESS_KEY_ID`, `$AWS_SECRET_ACCESS_KEY`
+- **GCP**: `~/.config/gcloud/application_default_credentials.json`, `$GOOGLE_APPLICATION_CREDENTIALS`
+- **Azure**: `~/.azure/` directory, `$AZURE_CLIENT_SECRET`
+- **GitHub**: `~/.config/gh/hosts.yml`, `$GITHUB_TOKEN`, `$GH_TOKEN`, `~/.git-credentials`
+- **SSH**: Private keys in `~/.ssh/`
+- **Docker**: `~/.docker/config.json`
+- **Kubernetes**: `~/.kube/config`
+- **Environment**: Sensitive env vars (token, secret, password, etc.)
+
+**Exit codes:**
+- `0` - No credentials found
+- `1` - Credentials found (rotation recommended)
+
+**Options:**
+- `--verbose` / `-v` - Show all checks including clean ones
+- `--json` / `-j` - JSON output format
+
+Example:
+```
+$ vtk scan credentials --json | jq -r '.credentials[].service' | sort -u
+AWS
+GitHub
+SSH
+```
+
+---
+
 ### Help
 
 For helpful information about commands and subcommands run the following:
