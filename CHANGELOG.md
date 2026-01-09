@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.2.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.2.0) (2026-01-09)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.1.0...v1.2.0)
+
+**Merged pull requests:**
+
+- feat(scan): add PowerShell scripts for Windows users [\#69](https://github.com/department-of-veterans-affairs/vtk/pull/69) ([ericboehs](https://github.com/ericboehs))
+- feat(scan): add vtk scan credentials for security incident response [\#68](https://github.com/department-of-veterans-affairs/vtk/pull/68) ([ericboehs](https://github.com/ericboehs))
+- feat(scan): add vtk scan repo for compromised package detection [\#65](https://github.com/department-of-veterans-affairs/vtk/pull/65) ([ericboehs](https://github.com/ericboehs))
+
 ## [v1.1.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.1.0) (2025-12-15)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.0.0...v1.1.0)
