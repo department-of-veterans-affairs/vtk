@@ -490,7 +490,7 @@ module Vtk
         end
 
         def wsl?
-          @wsl ||= File.exist?('/proc/version') && File.open('/proc/version').grep(/Microsoft/i).any?
+          @wsl ||= File.exist?('/proc/version') && File.foreach('/proc/version').grep(/Microsoft/i).any?
         end
 
         def ubuntu_like?

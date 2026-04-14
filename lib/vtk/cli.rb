@@ -9,7 +9,7 @@ module Vtk
   # @api public
   class CLI < Thor
     # Error raised by this runner
-    Error = Class.new(StandardError)
+    class Error < StandardError; end
 
     desc 'version', 'vtk version'
     def version
