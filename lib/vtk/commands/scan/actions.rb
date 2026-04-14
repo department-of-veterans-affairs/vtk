@@ -31,17 +31,8 @@ module Vtk
         end
 
         def execute(output: $stdout)
-          @output = output
-
-          unless options[:org] && !options[:org].empty?
-            output.puts 'ERROR: --org is required'
-            return 1
-          end
-
-          unless options[:action] && !options[:action].empty?
-            output.puts 'ERROR: --action is required (at least one)'
-            return 1
-          end
+          error = validation_error
+          return error_out(output, error) if error
 
           script_path, gem_root = find_script
           return script_not_found(output, gem_root) unless script_path
@@ -50,6 +41,22 @@ module Vtk
         end
 
         private
+
+        def validation_error
+          return 'ERROR: --org is required' if blank?(options[:org])
+          return 'ERROR: --action is required (at least one)' if blank?(options[:action])
+
+          nil
+        end
+
+        def blank?(value)
+          value.nil? || value.to_s.empty? || (value.respond_to?(:empty?) && value.empty?)
+        end
+
+        def error_out(output, message)
+          output.puts message
+          1
+        end
 
         def script_not_found(output, gem_root)
           output.puts 'ERROR: Could not find gh-action-trace.sh script'
@@ -64,15 +71,22 @@ module Vtk
         end
 
         def script_options
-          flags = BOOLEAN_FLAGS.select { |key, _| options[key] }.values
-          VALUE_FLAGS.each do |key, flag|
+          boolean_script_flags + value_script_flags + action_script_flags
+        end
+
+        def boolean_script_flags
+          BOOLEAN_FLAGS.select { |key, _| options[key] }.values
+        end
+
+        def value_script_flags
+          VALUE_FLAGS.flat_map do |key, flag|
             value = options[key]
-            flags += [flag, value.to_s] if value && !value.to_s.empty?
+            blank?(value) ? [] : [flag, value.to_s]
           end
-          Array(options[:action]).each do |action|
-            flags += ['--action', action]
-          end
-          flags
+        end
+
+        def action_script_flags
+          Array(options[:action]).flat_map { |action| ['--action', action] }
         end
 
         def find_script
