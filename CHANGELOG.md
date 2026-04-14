@@ -1,14 +1,23 @@
 # Changelog
 
+## [v1.3.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.3.0) (2026-04-14)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.2.0...v1.3.0)
+
+**Merged pull requests:**
+
+- feat\(scan\): add vtk scan actions for tracing GitHub Actions usage [\#72](https://github.com/department-of-veterans-affairs/vtk/pull/72) ([ericboehs](https://github.com/ericboehs))
+
 ## [v1.2.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.2.0) (2026-01-09)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.1.0...v1.2.0)
 
 **Merged pull requests:**
 
-- feat(scan): add PowerShell scripts for Windows users [\#69](https://github.com/department-of-veterans-affairs/vtk/pull/69) ([ericboehs](https://github.com/ericboehs))
-- feat(scan): add vtk scan credentials for security incident response [\#68](https://github.com/department-of-veterans-affairs/vtk/pull/68) ([ericboehs](https://github.com/ericboehs))
-- feat(scan): add vtk scan repo for compromised package detection [\#65](https://github.com/department-of-veterans-affairs/vtk/pull/65) ([ericboehs](https://github.com/ericboehs))
+- chore: release v1.2.0 [\#70](https://github.com/department-of-veterans-affairs/vtk/pull/70) ([ericboehs](https://github.com/ericboehs))
+- feat\(scan\): add PowerShell scripts for Windows users [\#69](https://github.com/department-of-veterans-affairs/vtk/pull/69) ([ericboehs](https://github.com/ericboehs))
+- feat\(scan\): add vtk scan credentials for security incident response [\#68](https://github.com/department-of-veterans-affairs/vtk/pull/68) ([ericboehs](https://github.com/ericboehs))
+- feat\(scan\): add vtk scan repo for compromised package detection [\#65](https://github.com/department-of-veterans-affairs/vtk/pull/65) ([ericboehs](https://github.com/ericboehs))
 
 ## [v1.1.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.1.0) (2025-12-15)
 
@@ -16,15 +25,24 @@
 
 **Merged pull requests:**
 
-- feat(scan): add vtk scan machine for Shai-Hulud detection [\#64](https://github.com/department-of-veterans-affairs/vtk/pull/64) ([ericboehs](https://github.com/ericboehs))
+- chore: bump version to 1.1.0 [\#67](https://github.com/department-of-veterans-affairs/vtk/pull/67) ([ericboehs](https://github.com/ericboehs))
 - fix: resolve rubocop offenses in socks/setup.rb [\#66](https://github.com/department-of-veterans-affairs/vtk/pull/66) ([ericboehs](https://github.com/ericboehs))
-- Fix rubocop exceptions and update GH to run on Ubuntu Latest [\#63](https://github.com/department-of-veterans-affairs/vtk/pull/63) ([ericboehs](https://github.com/ericboehs))
+- feat\(scan\): add vtk scan machine for Shai-Hulud detection [\#64](https://github.com/department-of-veterans-affairs/vtk/pull/64) ([ericboehs](https://github.com/ericboehs))
+- Update GH to run on Ubuntu Latest [\#63](https://github.com/department-of-veterans-affairs/vtk/pull/63) ([ericboehs](https://github.com/ericboehs))
 
 ## [v1.0.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.0.0) (2024-09-18)
 
-🎉
-
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.5...v1.0.0)
+
+**Closed issues:**
+
+- Error: GitHub Repository Not Mapped To eMASS System [\#59](https://github.com/department-of-veterans-affairs/vtk/issues/59)
+- Error: GitHub Repository Not Mapped To eMASS System [\#58](https://github.com/department-of-veterans-affairs/vtk/issues/58)
+- Error: GitHub Repository Not Mapped To eMASS System [\#57](https://github.com/department-of-veterans-affairs/vtk/issues/57)
+- Error: GitHub Repository Not Mapped To eMASS System [\#56](https://github.com/department-of-veterans-affairs/vtk/issues/56)
+- Error: GitHub Repository Not Mapped To eMASS System [\#55](https://github.com/department-of-veterans-affairs/vtk/issues/55)
+- Error: GitHub Repository Not Mapped To eMASS System [\#54](https://github.com/department-of-veterans-affairs/vtk/issues/54)
+- Error: GitHub Repository Not Mapped To eMASS System [\#51](https://github.com/department-of-veterans-affairs/vtk/issues/51)
 
 **Merged pull requests:**
 
@@ -34,6 +52,26 @@
 ## [v0.9.5](https://github.com/department-of-veterans-affairs/vtk/tree/v0.9.5) (2023-12-15)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v0.9.4...v0.9.5)
+
+**Closed issues:**
+
+- Error: GitHub Repository Not Mapped To eMASS System [\#50](https://github.com/department-of-veterans-affairs/vtk/issues/50)
+- Error: GitHub Repository Not Mapped To eMASS System [\#49](https://github.com/department-of-veterans-affairs/vtk/issues/49)
+- Error: GitHub Repository Not Mapped To eMASS System [\#48](https://github.com/department-of-veterans-affairs/vtk/issues/48)
+- Error: GitHub Repository Not Mapped To eMASS System [\#47](https://github.com/department-of-veterans-affairs/vtk/issues/47)
+- Error: GitHub Repository Not Mapped To eMASS System [\#46](https://github.com/department-of-veterans-affairs/vtk/issues/46)
+- Error: GitHub Repository Not Mapped To eMASS System [\#45](https://github.com/department-of-veterans-affairs/vtk/issues/45)
+- Error: GitHub Repository Not Mapped To eMASS System [\#44](https://github.com/department-of-veterans-affairs/vtk/issues/44)
+- Error: GitHub Repository Not Mapped To eMASS System [\#43](https://github.com/department-of-veterans-affairs/vtk/issues/43)
+- Error: GitHub Repository Not Mapped To eMASS System [\#42](https://github.com/department-of-veterans-affairs/vtk/issues/42)
+- Error: GitHub Repository Not Mapped To eMASS System [\#41](https://github.com/department-of-veterans-affairs/vtk/issues/41)
+- Error: GitHub Repository Not Mapped To eMASS System [\#40](https://github.com/department-of-veterans-affairs/vtk/issues/40)
+- Error: GitHub Repository Not Mapped To eMASS System [\#39](https://github.com/department-of-veterans-affairs/vtk/issues/39)
+- Error: GitHub Repository Not Mapped To eMASS System [\#38](https://github.com/department-of-veterans-affairs/vtk/issues/38)
+- Error: GitHub Repository Not Mapped To eMASS System [\#37](https://github.com/department-of-veterans-affairs/vtk/issues/37)
+- Error: GitHub Repository Not Mapped To eMASS System [\#36](https://github.com/department-of-veterans-affairs/vtk/issues/36)
+- Error: GitHub Repository Not Mapped To eMASS System [\#35](https://github.com/department-of-veterans-affairs/vtk/issues/35)
+- Notice: Automatic archival of repository due to inactivity [\#34](https://github.com/department-of-veterans-affairs/vtk/issues/34)
 
 **Merged pull requests:**
 
