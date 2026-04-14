@@ -17,7 +17,7 @@
 #   --org ORG           GitHub org to search (required)
 #   --action ACTION     Action to trace — repeatable (required, at least one)
 #   --depth N           Max recursion depth for shared workflows (default: 2)
-#   --format FORMAT     Output format: text, json, both (default: both)
+#   --format FORMAT     Output format: text, json, csv, both (default: both)
 #   --external          Also search all of GitHub for external shared workflows (slower)
 #   --output FILE       Write JSON output to file (default: stdout)
 #   --check-runs FROM..TO  Check workflow run history during a time window (ISO 8601)
@@ -187,7 +187,7 @@ parse_args() {
 
   [[ -n "$ORG" ]] || die "Missing required --org"
   [[ ${#TARGET_ACTIONS[@]} -gt 0 ]] || die "Missing required --action (at least one)"
-  [[ "$FORMAT" =~ ^(text|json|both)$ ]] || die "Invalid --format: $FORMAT (must be text, json, or both)"
+  [[ "$FORMAT" =~ ^(text|json|csv|both)$ ]] || die "Invalid --format: $FORMAT (must be text, json, csv, or both)"
   [[ "$MAX_DEPTH" =~ ^[0-9]+$ ]] || die "Invalid --depth: $MAX_DEPTH (must be a number)"
 }
 
@@ -1274,7 +1274,13 @@ main() {
       else
         output_json > "$json_file"
       fi
-      output_csv "$csv_file"
+      ;;
+    csv)
+      if [[ -n "$OUTPUT_FILE" ]]; then
+        output_csv "$OUTPUT_FILE"
+      else
+        output_csv "$csv_file"
+      fi
       ;;
     both)
       output_text
@@ -1292,12 +1298,18 @@ main() {
     printf '\n REPORTS\n'
     printf '%.0s-' {1..40}
     printf '\n'
-    if [[ -n "$OUTPUT_FILE" ]]; then
-      printf '  JSON: %s\n' "$OUTPUT_FILE"
-    else
-      printf '  JSON: %s\n' "$json_file"
-    fi
-    printf '  CSV:  %s\n' "$csv_file"
+    case "$FORMAT" in
+      json)
+        printf '  JSON: %s\n' "${OUTPUT_FILE:-$json_file}"
+        ;;
+      csv)
+        printf '  CSV:  %s\n' "${OUTPUT_FILE:-$csv_file}"
+        ;;
+      both)
+        printf '  JSON: %s\n' "${OUTPUT_FILE:-$json_file}"
+        printf '  CSV:  %s\n' "$csv_file"
+        ;;
+    esac
     printf '\n'
   fi
 }
