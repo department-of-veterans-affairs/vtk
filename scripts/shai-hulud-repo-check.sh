@@ -50,7 +50,7 @@ CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/vtk"
 CACHE_FILE="$CACHE_DIR/compromised-packages.txt"
 CACHE_TTL=86400  # 24 hours
 MIN_EXPECTED_PACKAGES=500
-EXPECTED_HEADER="Shai-Hulud NPM Supply Chain Attack"
+EXPECTED_HEADER="Shai-Hulud.*Supply Chain Attack"
 PLAYBOOK_URL="https://department-of-veterans-affairs.github.io/eert/shai-hulud-dev-machine-cleanup-playbook"
 
 # Parse arguments
@@ -172,7 +172,7 @@ validate_package_list() {
   local content="$1"
 
   # Check for expected header
-  if ! echo "$content" | grep -q "$EXPECTED_HEADER"; then
+  if ! echo "$content" | grep -Eq "$EXPECTED_HEADER"; then
     echo "Downloaded file missing expected header - possible MITM or corrupted file" >&2
     return 1
   fi
