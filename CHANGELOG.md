@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.3.1](https://github.com/department-of-veterans-affairs/vtk/tree/v1.3.1) (2026-05-13)
+
+[Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.3.0...v1.3.1)
+
+**Merged pull requests:**
+
+- fix\(scan\): match renamed compromised packages header [\#74](https://github.com/department-of-veterans-affairs/vtk/pull/74) ([ericboehs](https://github.com/ericboehs))
+- chore: release v1.3.0 [\#73](https://github.com/department-of-veterans-affairs/vtk/pull/73) ([ericboehs](https://github.com/ericboehs))
+
 ## [v1.3.0](https://github.com/department-of-veterans-affairs/vtk/tree/v1.3.0) (2026-04-14)
 
 [Full Changelog](https://github.com/department-of-veterans-affairs/vtk/compare/v1.2.0...v1.3.0)
