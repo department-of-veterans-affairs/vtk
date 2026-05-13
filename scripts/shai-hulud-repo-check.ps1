@@ -91,7 +91,7 @@ $CacheDir = Join-Path $env:LOCALAPPDATA "vtk"
 $CacheFile = Join-Path $CacheDir "compromised-packages.txt"
 $CacheTTL = 86400  # 24 hours in seconds
 $MinExpectedPackages = 500
-$ExpectedHeader = "Shai-Hulud NPM Supply Chain Attack"
+$ExpectedHeader = "Shai-Hulud.*Supply Chain Attack"
 $PlaybookUrl = "https://department-of-veterans-affairs.github.io/eert/shai-hulud-dev-machine-cleanup-playbook"
 
 # Resolve path
@@ -151,7 +151,7 @@ function Test-PackageListValid {
     param([string]$Content)
 
     # Check for expected header
-    if ($Content -notmatch [regex]::Escape($ExpectedHeader)) {
+    if ($Content -notmatch $ExpectedHeader) {
         Write-Warning "Downloaded file missing expected header - possible MITM or corrupted file"
         return $false
     }
